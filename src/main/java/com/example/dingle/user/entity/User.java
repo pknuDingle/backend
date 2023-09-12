@@ -1,6 +1,7 @@
 package com.example.dingle.user.entity;
 
 import com.example.dingle.auditable.Auditable;
+import com.example.dingle.userCategory.entity.UserCategory;
 import com.example.dingle.userMajor.entity.UserMajor;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -49,4 +50,7 @@ public class User extends Auditable {
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<UserMajor> userMajors = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<UserCategory> userCategories = new ArrayList<>();
 }

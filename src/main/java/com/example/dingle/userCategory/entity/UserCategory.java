@@ -1,4 +1,4 @@
-package com.example.dingle.userMajor.entity;
+package com.example.dingle.userCategory.entity;
 
 import com.example.dingle.auditable.Auditable;
 import com.example.dingle.major.entity.Major;
@@ -15,7 +15,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class UserMajor extends Auditable {
+public class UserCategory extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -23,8 +23,4 @@ public class UserMajor extends Auditable {
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "MAJOR_ID")
-    private Major major;
 }
