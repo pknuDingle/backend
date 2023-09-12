@@ -6,7 +6,8 @@ import java.util.Arrays;
 
 public enum ExceptionCode {
     USER_NOT_FOUND(404, "User not found"),
-    MAJOR_NOT_FOUND(404, "Major not found");
+    MAJOR_NOT_FOUND(404, "Major not found"),
+    USERMAJOR_NOT_FOUND(404, "UserMajor not found");
 
 
     @Getter
