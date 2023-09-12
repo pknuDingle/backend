@@ -41,7 +41,7 @@ public class UserController {
     }
 
     // Update
-    @GetMapping("/{user-id}")
+    @PutMapping("/{user-id}")
     public ResponseEntity patchUser(@Positive @PathVariable("user-id") long userId,
                                     @Valid @RequestBody UserRequestDto.Patch patch) {
         patch.setId(userId);
