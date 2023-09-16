@@ -8,8 +8,6 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface NoticeMapper {
     Notice noticeResponseDtoPostToNotice(NoticeRequestDto.Post post);
-
     Notice noticeResponseDtoPatchToNotice(NoticeRequestDto.Patch patch);
-
     NoticeResponseDto.Response noticeToNoticeResponseDtoResponse(Notice notice);
 }

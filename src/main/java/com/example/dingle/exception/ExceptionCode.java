@@ -10,6 +10,7 @@ public enum ExceptionCode {
     NOTICE_NOT_FOUND(404, "Notice not found"),
     CATEGORY_NOT_FOUND(404, "Category not found"),
     JJIM_NOT_FOUND(404, "Jjim not found"),
+    NOTICECATEGORY_NOT_FOUND(404, "NoticeCategory not found");
 
 
     @Getter
