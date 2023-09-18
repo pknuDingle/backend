@@ -2,6 +2,7 @@ package com.example.dingle.category.entity;
 
 import com.example.dingle.auditable.Auditable;
 import com.example.dingle.noticeCategory.entity.NoticeCategory;
+import com.example.dingle.userCategory.entity.UserCategory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,5 +27,8 @@ public class Category extends Auditable {
 
     @OneToMany(mappedBy = "category", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<NoticeCategory> noticeCategories = new ArrayList<>();
+
+    @OneToMany(mappedBy = "category", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<UserCategory> userCategories = new ArrayList<>();
 }
 
