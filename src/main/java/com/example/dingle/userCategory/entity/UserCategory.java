@@ -1,6 +1,7 @@
 package com.example.dingle.userCategory.entity;
 
 import com.example.dingle.auditable.Auditable;
+import com.example.dingle.category.entity.Category;
 import com.example.dingle.major.entity.Major;
 import com.example.dingle.user.entity.User;
 import lombok.AllArgsConstructor;
@@ -23,4 +24,8 @@ public class UserCategory extends Auditable {
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "CATEGORY_ID")
+    private Category category;
 }
