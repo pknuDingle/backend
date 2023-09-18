@@ -5,7 +5,11 @@ import lombok.Getter;
 import java.util.Arrays;
 
 public enum ExceptionCode {
-    USER_NOT_FOUND(404, "User not found");
+    USER_NOT_FOUND(404, "User not found"),
+    MAJOR_NOT_FOUND(404, "Major not found"),
+    USERMAJOR_NOT_FOUND(404, "UserMajor not found"),
+    NOTICEMAJOR_NOT_FOUND(404, "NoticeMajor not found"),
+    USERCATEGORY_NOT_FOUND(404, "UserCategory not found");
 
 
     @Getter
