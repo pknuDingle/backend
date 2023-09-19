@@ -1,5 +1,6 @@
 package com.example.dingle.notice.service;
 
+import com.example.dingle.crawling.PknuMain;
 import com.example.dingle.exception.BusinessLogicException;
 import com.example.dingle.exception.ExceptionCode;
 import com.example.dingle.notice.entity.Notice;
@@ -16,6 +17,10 @@ public class NoticeService {
 
     // Create
     public Notice createNotice(Notice notice) {
+        // 크롤링 테스트
+        PknuMain pknuMain = new PknuMain();
+        notice = pknuMain.crawling();
+
         return noticeRepository.save(notice);
     }
 
