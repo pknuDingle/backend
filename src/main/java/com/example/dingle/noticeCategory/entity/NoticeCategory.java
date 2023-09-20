@@ -27,4 +27,9 @@ public class NoticeCategory extends Auditable {
     @ManyToOne
     @JoinColumn(name = "CATEGORY_ID")
     private Category category;
+
+    public NoticeCategory(Notice notice, Category category) {
+        this.notice = notice;
+        this.category = category;
+    }
 }

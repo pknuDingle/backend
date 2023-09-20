@@ -39,4 +39,10 @@ public class Notice extends Auditable {
 
     @OneToMany(mappedBy = "notice", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<NoticeCategory> noticeCategories = new ArrayList<>();
+
+    public Notice(String title, String content, String link) {
+        this.title = title;
+        this.content = content;
+        this.link = link;
+    }
 }
