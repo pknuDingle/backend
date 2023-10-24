@@ -39,8 +39,8 @@ dependencies {
     // DB
     runtimeOnly 'com.mysql:mysql-connector-j'
 
-    // crawling
-    implementation 'org.jsoup:jsoup:1.11.3'
+    // jsoup
+    implementation 'org.jsoup:jsoup:1.15.3'
 }
 
 tasks.named('test') {
