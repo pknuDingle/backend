@@ -3,7 +3,6 @@ package com.example.dingle.crawling;
 import com.example.dingle.notice.entity.Notice;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.jsoup.helper.StringUtil;
 import org.jsoup.nodes.*;
 import org.jsoup.select.Elements;
 import org.jsoup.select.NodeTraversor;

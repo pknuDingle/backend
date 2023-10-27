@@ -41,7 +41,7 @@ public class User extends Auditable {
         NOT_DORMANT("기숙사생X");
 
         @Getter
-        private String state;
+        private final String state;
 
         Attendance(String state) {
             this.state = state;

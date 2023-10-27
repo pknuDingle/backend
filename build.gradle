@@ -39,8 +39,16 @@ dependencies {
     // DB
     runtimeOnly 'com.mysql:mysql-connector-j'
 
-    // jsoup
+    // jsoup(crawling)
     implementation 'org.jsoup:jsoup:1.15.3'
+
+    // kakao login
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation platform('org.springframework.boot:spring-boot-dependencies:2.7.15')
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
+    implementation "io.jsonwebtoken:jjwt:0.9.1"
 }
 
 tasks.named('test') {
