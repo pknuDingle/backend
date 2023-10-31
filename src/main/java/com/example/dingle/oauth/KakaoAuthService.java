@@ -7,8 +7,7 @@ import com.example.dingle.user.repository.UserRepository;
 import jdk.jshell.spi.ExecutionControl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -20,7 +19,7 @@ public class KakaoAuthService {
     @Transactional(readOnly = true)
     public Long isSignedUp(String token) {
         KakaoUserInfoResponse userInfo = kakaoUserInfo.getUserInfo(token);
-        User user = userRepository.findByKeyCode(userInfo.getId().toString()).orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+        User user = userRepository.findByToken(userInfo.getId().toString()).orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
         return user.getId();
     }
 }

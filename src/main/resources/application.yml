@@ -5,10 +5,16 @@ spring:
         format_sql: true
     show-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
 
   datasource:
-    url:
-    driver-class-name:
-    username:
-    password:
+    url: jdbc:mysql://localhost:3306/dingle
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+
+jwt:
+  key: ${JWT_KEY}              # 민감한 정보는 시스템 환경 변수에서 로드한다.
+  #  access-token-expiration-minutes: 30   # access-token 유효시간 : 30분
+  access-token-expiration-minutes: 10000   # access-token 유효시간 : 10000분 -> 테스로 변경
+  refresh-token-expiration-minutes: 420 # sercret-token 유효시간 : 420분(7시간)

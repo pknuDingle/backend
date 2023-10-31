@@ -29,6 +29,9 @@ public class User extends Auditable {
     private String image;
 
     @Column
+    private long kakakoId;
+
+    @Column
     private String token;
 
 

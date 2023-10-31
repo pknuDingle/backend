@@ -21,7 +21,7 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
-    @Value("${jwt.secret}") // application.properties 등에 보관한다.
+    @Value("${jwt.key}") // application.properties 등에 보관한다.
     private String secretKey;
 
     private final UserDetailsService userDetailsService;
