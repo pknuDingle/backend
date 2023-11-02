@@ -1,5 +1,6 @@
 package com.example.dingle.oauth.jwt;
 
+import com.example.dingle.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,6 +27,9 @@ public class JwtAuthFilter extends GenericFilterBean {
         if (token != null && jwtTokenProvider.validateToken(token)) {
             Authentication authentication = jwtTokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
+
+//            User user = (User) authentication.getPrincipal();
+//            System.out.println("!! token : " + user.getId() + user.getName());
         }
 
         // 다음 필터링

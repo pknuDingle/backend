@@ -11,6 +11,4 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByKakakoId(Long kakaoId);
-    Optional<User> findByToken(String token);
-    Optional<User> findByEmail(String email);
 }

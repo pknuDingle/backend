@@ -23,17 +23,16 @@ public class User extends Auditable {
     private long id;
 
     @Column
+    private String name;
+
+    @Column
     private String email;
 
     @Column
-    private String image;
+    private String imageUrl;
 
     @Column
     private long kakakoId;
-
-    @Column
-    private String token;
-
 
     @Enumerated(EnumType.STRING)
     private Attendance status = Attendance.DORMANT;

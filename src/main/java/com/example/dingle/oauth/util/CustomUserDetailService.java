@@ -1,4 +1,4 @@
-package com.example.dingle.oauth;
+package com.example.dingle.oauth.util;
 
 import com.example.dingle.exception.*;
 import com.example.dingle.user.entity.User;
@@ -19,8 +19,8 @@ public class CustomUserDetailService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<User> optionalMember = userRepository.findByEmail(email);
+    public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
+        Optional<User> optionalMember = userRepository.findById(Long.valueOf(id));
         User findUser = optionalMember.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
 
         return new CustomUserDetails(findUser);
@@ -30,8 +30,8 @@ public class CustomUserDetailService implements UserDetailsService {
     private static final class CustomUserDetails extends User implements UserDetails {
         CustomUserDetails(User user) {
             setId(user.getId());
-            setToken(user.getToken());
-            setImage(user.getImage());
+            setName(user.getName());
+            setImageUrl(user.getImageUrl());
             setEmail(user.getEmail());
             setKakakoId(user.getKakakoId());
             setStatus(user.getStatus());
@@ -46,7 +46,7 @@ public class CustomUserDetailService implements UserDetailsService {
 
         @Override
         public String getUsername() {
-            return getEmail();
+            return String.valueOf(getId());
         }
 
         @Override

@@ -1,5 +1,9 @@
 package com.example.dingle.oauth.jwt;
 
+import com.example.dingle.exception.BusinessLogicException;
+import com.example.dingle.exception.ExceptionCode;
+import com.example.dingle.user.entity.User;
+import com.example.dingle.user.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -23,8 +27,8 @@ public class JwtTokenProvider {
 
     @Value("${jwt.key}") // application.properties 등에 보관한다.
     private String secretKey;
-
-    private final UserDetailsService userDetailsService;
+    private final UserRepository userRepository;
+//    private final UserDetailsService userDetailsService;
 
     // 객체 초기화, secretKey를 Base64로 인코딩
     @PostConstruct
@@ -46,8 +50,10 @@ public class JwtTokenProvider {
 
     // 인증 정보 조회
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserPk(token));
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+//        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserPk(token));
+//        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        User user = userRepository.findById(Long.valueOf(this.getUserPk(token))).orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+        return new UsernamePasswordAuthenticationToken(user, "", null);
     }
 
     // 토큰에서 회원 정보 추출
@@ -67,6 +73,6 @@ public class JwtTokenProvider {
 
     // Request의 Header에서 token 값 가져오기
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("X-AUTH-TOKEN");
+        return request.getHeader("authorization");
     }
 }

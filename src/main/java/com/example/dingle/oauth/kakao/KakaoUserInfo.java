@@ -1,5 +1,6 @@
-package com.example.dingle.oauth;
+package com.example.dingle.oauth.kakao;
 
+import com.example.dingle.oauth.kakaoResponse.KakaoUserInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;

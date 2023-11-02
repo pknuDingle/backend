@@ -29,11 +29,11 @@ public class UserService {
     public User updateUser(User user) {
         User findUser = verifiedUser(user.getId());
 
+        Optional.ofNullable(user.getName()).ifPresent(findUser::setName);
         Optional.ofNullable(user.getEmail()).ifPresent(findUser::setEmail);
-        Optional.ofNullable(user.getImage()).ifPresent(findUser::setImage);
-        Optional.ofNullable(user.getToken()).ifPresent(findUser::setToken);
+        Optional.ofNullable(user.getImageUrl()).ifPresent(findUser::setImageUrl);
         Optional.ofNullable(user.getStatus()).ifPresent(findUser::setStatus);
-
+        if(user.getKakakoId() != 0) findUser.setKakakoId(user.getKakakoId());
 
         return userRepository.save(findUser);
     }
