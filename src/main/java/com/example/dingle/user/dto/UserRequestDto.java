@@ -15,9 +15,10 @@ public class UserRequestDto {
     @AllArgsConstructor
     public static class Post {
         private long id;
+        private String name;
         private String email;
-        private String image;
-        private String token;
+        private String imageUrl;
+        private long kakakoId;
         private User.Attendance status;
     }
 
@@ -26,9 +27,10 @@ public class UserRequestDto {
     @AllArgsConstructor
     public static class Patch {
         private long id;
+        private String name;
         private String email;
-        private String image;
-        private String token;
+        private String imageUrl;
+        private long kakakoId;
         private User.Attendance status;
     }
 }
