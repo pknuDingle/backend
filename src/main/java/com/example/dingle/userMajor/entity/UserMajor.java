@@ -27,4 +27,9 @@ public class UserMajor extends Auditable {
     @ManyToOne
     @JoinColumn(name = "MAJOR_ID")
     private Major major;
+
+    public UserMajor(User user, Major major) {
+        this.user = user;
+        this.major = major;
+    }
 }

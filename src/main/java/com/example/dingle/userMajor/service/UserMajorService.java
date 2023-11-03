@@ -2,6 +2,8 @@ package com.example.dingle.userMajor.service;
 
 import com.example.dingle.exception.BusinessLogicException;
 import com.example.dingle.exception.ExceptionCode;
+import com.example.dingle.major.entity.Major;
+import com.example.dingle.user.entity.User;
 import com.example.dingle.userMajor.entity.UserMajor;
 import com.example.dingle.userMajor.repository.UserMajorRepository;
 import lombok.AllArgsConstructor;
@@ -15,7 +17,8 @@ public class UserMajorService {
     private final UserMajorRepository userMajorRepository;
 
     // Create
-    public UserMajor createUserMajor(UserMajor userMajor) {
+    public UserMajor createUserMajor(User currentUser, Major major) {
+        UserMajor userMajor = major.toUserMajor(currentUser);
         return userMajorRepository.save(userMajor);
     }
 

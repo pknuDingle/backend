@@ -7,6 +7,7 @@ import com.example.dingle.major.repository.MajorRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,6 +23,10 @@ public class MajorService {
     // Read
     public Major findMajor(long majorId) {
         return verifiedMajor(majorId);
+    }
+
+    public List<Major> findAllMajors() {
+        return majorRepository.findAll();
     }
 
     // Update

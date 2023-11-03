@@ -5,6 +5,11 @@ import com.example.dingle.category.dto.CategoryResponseDto;
 import com.example.dingle.category.entity.Category;
 import com.example.dingle.category.mapper.CategoryMapper;
 import com.example.dingle.category.service.CategoryService;
+import com.example.dingle.major.dto.MajorRequestDto;
+import com.example.dingle.major.dto.MajorResponseDto;
+import com.example.dingle.major.entity.Major;
+import com.example.dingle.major.mapper.MajorMapper;
+import com.example.dingle.major.service.MajorService;
 import com.example.dingle.user.dto.UserRequestDto;
 import com.example.dingle.user.dto.UserResponseDto;
 import com.example.dingle.user.entity.User;
@@ -33,6 +38,13 @@ public class UserController {
     private final CategoryService categoryService;
     private final CategoryMapper categoryMapper;
     private final UserCategoryService userCategoryService;
+    private final UserMajorService userMajorService;
+    private final MajorMapper majorMapper;
+    private final MajorService majorService;
+
+
+    // 언니가 준 토큰으로 로그인 -> JWT 발급 받으면 -> API 요청
+    // 카테고리 enum 값 달기
 
     // Create
     @PostMapping
@@ -90,4 +102,22 @@ public class UserController {
         return new ResponseEntity(HttpStatus.CREATED);
     }
 
+    @GetMapping("/homepages")
+    public ResponseEntity<List<MajorResponseDto.Response>> getAllHomepages() {
+        List<Major> majors = majorService.findAllMajors();
+        List<MajorResponseDto.Response> response = majors.stream()
+                .map(majorMapper::majorToMajorResponseDtoResponse)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("/homepages")
+    public ResponseEntity setHomepage(@RequestHeader("authorization") String token, @Valid @RequestBody MajorRequestDto.Post post) {
+        User currentUser = userService.getCurrentUserByJwt(token);
+        Major major = majorMapper.majorRequestDtoPostToMajor(post);
+        userMajorService.createUserMajor(currentUser, major);
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 }
