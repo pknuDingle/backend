@@ -7,7 +7,9 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface MajorMapper {
-    Major majorResponseDtoPostToMajor(MajorRequestDto.Post post);
-    Major majorResponseDtoPatchToMajor(MajorRequestDto.Patch patch);
+    Major majorRequestDtoPostToMajor(MajorRequestDto.Post post);
+
+    Major majorRequestDtoPatchToMajor(MajorRequestDto.Patch patch);
+
     MajorResponseDto.Response majorToMajorResponseDtoResponse(Major major);
 }

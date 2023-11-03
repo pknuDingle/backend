@@ -25,7 +25,7 @@ public class MajorController {
     // Create
     @PostMapping
     public ResponseEntity postMajor(@Valid @RequestBody MajorRequestDto.Post post) {
-        Major major = majorService.createMajor(majorMapper.majorResponseDtoPostToMajor(post));
+        Major major = majorService.createMajor(majorMapper.majorRequestDtoPostToMajor(post));
         MajorResponseDto.Response response = majorMapper.majorToMajorResponseDtoResponse(major);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -43,9 +43,9 @@ public class MajorController {
     // Update
     @PutMapping("/{major-id}")
     public ResponseEntity patchMajor(@Positive @PathVariable("major-id") long majorId,
-                                    @Valid @RequestBody MajorRequestDto.Patch patch) {
+                                     @Valid @RequestBody MajorRequestDto.Patch patch) {
         patch.setId(majorId);
-        Major major = majorService.updateMajor(majorMapper.majorResponseDtoPatchToMajor(patch));
+        Major major = majorService.updateMajor(majorMapper.majorRequestDtoPatchToMajor(patch));
         MajorResponseDto.Response response = majorMapper.majorToMajorResponseDtoResponse(major);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
