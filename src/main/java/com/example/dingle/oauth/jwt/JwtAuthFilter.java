@@ -29,7 +29,7 @@ public class JwtAuthFilter extends GenericFilterBean {
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
 //            User user = (User) authentication.getPrincipal();
-//            System.out.println("!! token : " + user.getId() + user.getName());
+//            System.out.println("!! token : " + user.getId() + ", " + user.getName());
         }
 
         // 다음 필터링
