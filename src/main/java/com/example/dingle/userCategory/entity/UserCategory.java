@@ -28,4 +28,9 @@ public class UserCategory extends Auditable {
     @ManyToOne
     @JoinColumn(name = "CATEGORY_ID")
     private Category category;
+
+    public UserCategory(User user, Category category) {
+        this.user = user;
+        this.category = category;
+    }
 }

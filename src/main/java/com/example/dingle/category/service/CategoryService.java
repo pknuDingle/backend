@@ -7,6 +7,7 @@ import com.example.dingle.exception.ExceptionCode;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,6 +23,10 @@ public class CategoryService {
     // Read
     public Category findCategory(long categoryId) {
         return verifiedCategory(categoryId);
+    }
+
+    public List<Category> findAllCategories() {
+        return categoryRepository.findAll();
     }
 
     // Update
