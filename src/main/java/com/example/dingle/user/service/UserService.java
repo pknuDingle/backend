@@ -2,6 +2,7 @@ package com.example.dingle.user.service;
 
 import com.example.dingle.exception.BusinessLogicException;
 import com.example.dingle.exception.ExceptionCode;
+import com.example.dingle.oauth.jwt.JwtTokenProvider;
 import com.example.dingle.user.dto.UserRequestDto;
 import com.example.dingle.user.entity.User;
 import com.example.dingle.user.repository.UserRepository;
@@ -14,6 +15,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     // Create
     public User createUser(User user) {
@@ -48,5 +50,9 @@ public class UserService {
     public User verifiedUser(long userId) {
         Optional<User> user = userRepository.findById(userId);
         return user.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+    }
+
+    public User getCurrentUserByJwt(String token) {
+        return jwtTokenProvider.getUserByJwt(token);
     }
 }

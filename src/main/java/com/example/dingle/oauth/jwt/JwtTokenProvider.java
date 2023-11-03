@@ -75,4 +75,8 @@ public class JwtTokenProvider {
     public String resolveToken(HttpServletRequest request) {
         return request.getHeader("authorization");
     }
+
+    public User getUserByJwt(String token) {
+        return userRepository.findById(Long.valueOf(this.getUserPk(token))).orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+    }
 }
