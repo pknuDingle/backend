@@ -67,6 +67,7 @@ public class JwtTokenProvider {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (Exception e) {
+            System.out.println("JWT 인증 문제 발생");
             return false;
         }
     }

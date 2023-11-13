@@ -64,6 +64,14 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @GetMapping
+    public ResponseEntity getUser() {
+        User user = userService.findUser();
+        UserResponseDto.Response response = userMapper.userToUserResponseDtoResponse(user);
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
     // Update
     @PutMapping("/{user-id}")
     public ResponseEntity<UserResponseDto.Response> patchUser(@Positive @PathVariable("user-id") long userId,
