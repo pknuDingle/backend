@@ -5,6 +5,7 @@ import com.example.dingle.exception.ExceptionCode;
 import com.example.dingle.user.dto.UserRequestDto;
 import com.example.dingle.user.entity.User;
 import com.example.dingle.user.repository.UserRepository;
+import com.example.dingle.util.FindUserByJWT;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final FindUserByJWT findUserByJWT;
 
     // Create
     public User createUser(User user) {
@@ -23,6 +25,10 @@ public class UserService {
     // Read
     public User findUser(long userId) {
         return verifiedUser(userId);
+    }
+
+    public User findUser() {
+        return findUserByJWT.getLoginUser();
     }
 
     // Update
