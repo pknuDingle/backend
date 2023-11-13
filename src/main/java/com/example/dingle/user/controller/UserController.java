@@ -102,8 +102,8 @@ public class UserController {
     }
 
     @PostMapping("/keywords")
-    public ResponseEntity setKeyword(@RequestHeader("authorization") String token, @Valid @RequestBody CategoryRequestDto.Post post) {
-        User currentUser = userService.getCurrentUserByJwt(token);
+    public ResponseEntity setKeyword(@Valid @RequestBody CategoryRequestDto.Post post) {
+        User currentUser = userService.findUser();
         Category category = categoryMapper.categoryRequestDtoPostToCategory(post);
         userCategoryService.createUserCategory(currentUser, category);
 
@@ -121,8 +121,8 @@ public class UserController {
     }
 
     @PostMapping("/homepages")
-    public ResponseEntity setHomepage(@RequestHeader("authorization") String token, @Valid @RequestBody MajorRequestDto.Post post) {
-        User currentUser = userService.getCurrentUserByJwt(token);
+    public ResponseEntity setHomepage(@Valid @RequestBody MajorRequestDto.Post post) {
+        User currentUser = userService.findUser();
         Major major = majorMapper.majorRequestDtoPostToMajor(post);
         userMajorService.createUserMajor(currentUser, major);
 
