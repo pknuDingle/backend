@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserMajorRepository extends JpaRepository<UserMajor, Long> {
+
+    void deleteAllByUserId(Long userId);
 }

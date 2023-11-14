@@ -8,6 +8,7 @@ import com.example.dingle.userMajor.entity.UserMajor;
 import com.example.dingle.userMajor.repository.UserMajorRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -32,6 +33,11 @@ public class UserMajorService {
     public void deleteUserMajor(long userMajorId) {
         UserMajor userMajor = verifiedUserMajor(userMajorId);
         userMajorRepository.delete(userMajor);
+    }
+
+    @Transactional
+    public void deleteAllUserMajor(User currentUser) {
+        userMajorRepository.deleteAllByUserId(currentUser.getId());
     }
 
     // 증명

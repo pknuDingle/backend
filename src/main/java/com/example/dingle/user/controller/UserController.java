@@ -105,6 +105,7 @@ public class UserController {
     public ResponseEntity setKeyword(@Valid @RequestBody List<CategoryRequestDto.Post> posts) {
         User currentUser = userService.findUser();
 
+        userCategoryService.deleteAllUserCategory(currentUser);
         List<Category> categories = posts.stream()
                 .map(post -> categoryMapper.categoryRequestDtoPostToCategory(post))
                 .collect(Collectors.toList());
@@ -127,6 +128,7 @@ public class UserController {
     public ResponseEntity setHomepage(@Valid @RequestBody List<MajorRequestDto.Post> posts) {
         User currentUser = userService.findUser();
 
+        userMajorService.deleteAllUserMajor(currentUser);
         List<Major> majors = posts.stream()
                 .map(post -> majorMapper.majorRequestDtoPostToMajor(post))
                 .collect(Collectors.toList());

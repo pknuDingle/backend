@@ -8,6 +8,7 @@ import com.example.dingle.userCategory.entity.UserCategory;
 import com.example.dingle.userCategory.repository.UserCategoryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -32,6 +33,11 @@ public class UserCategoryService {
     public void deleteUserCategory(long userCategoryId) {
         UserCategory userCategory = verifiedUserCategory(userCategoryId);
         userCategoryRepository.delete(userCategory);
+    }
+
+    @Transactional
+    public void deleteAllUserCategory(User currentUser) {
+        userCategoryRepository.deleteAllByUserId(currentUser.getId());
     }
 
     // 증명
