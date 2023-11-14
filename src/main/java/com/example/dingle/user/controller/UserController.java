@@ -102,10 +102,13 @@ public class UserController {
     }
 
     @PostMapping("/keywords")
-    public ResponseEntity setKeyword(@Valid @RequestBody CategoryRequestDto.Post post) {
+    public ResponseEntity setKeyword(@Valid @RequestBody List<CategoryRequestDto.Post> posts) {
         User currentUser = userService.findUser();
-        Category category = categoryMapper.categoryRequestDtoPostToCategory(post);
-        userCategoryService.createUserCategory(currentUser, category);
+
+        List<Category> categories = posts.stream()
+                .map(post -> categoryMapper.categoryRequestDtoPostToCategory(post))
+                .collect(Collectors.toList());
+        categories.forEach(category -> userCategoryService.createUserCategory(currentUser, category));
 
         return new ResponseEntity(HttpStatus.CREATED);
     }
@@ -121,10 +124,13 @@ public class UserController {
     }
 
     @PostMapping("/homepages")
-    public ResponseEntity setHomepage(@Valid @RequestBody MajorRequestDto.Post post) {
+    public ResponseEntity setHomepage(@Valid @RequestBody List<MajorRequestDto.Post> posts) {
         User currentUser = userService.findUser();
-        Major major = majorMapper.majorRequestDtoPostToMajor(post);
-        userMajorService.createUserMajor(currentUser, major);
+
+        List<Major> majors = posts.stream()
+                .map(post -> majorMapper.majorRequestDtoPostToMajor(post))
+                .collect(Collectors.toList());
+        majors.forEach(major -> userMajorService.createUserMajor(currentUser, major));
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
