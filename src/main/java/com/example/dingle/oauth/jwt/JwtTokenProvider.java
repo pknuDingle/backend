@@ -28,7 +28,6 @@ public class JwtTokenProvider {
     @Value("${jwt.key}") // application.properties 등에 보관한다.
     private String secretKey;
     private final UserRepository userRepository;
-//    private final UserDetailsService userDetailsService;
 
     // 객체 초기화, secretKey를 Base64로 인코딩
     @PostConstruct
@@ -75,9 +74,5 @@ public class JwtTokenProvider {
     // Request의 Header에서 token 값 가져오기
     public String resolveToken(HttpServletRequest request) {
         return request.getHeader("authorization");
-    }
-
-    public User getUserByJwt(String token) {
-        return userRepository.findById(Long.valueOf(this.getUserPk(token))).orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
     }
 }
