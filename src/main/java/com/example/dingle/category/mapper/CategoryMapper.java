@@ -7,7 +7,9 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface CategoryMapper {
-    Category categoryResponseDtoPostToCategory(CategoryRequestDto.Post post);
-    Category categoryResponseDtoPatchToCategory(CategoryRequestDto.Patch patch);
+    Category categoryRequestDtoPostToCategory(CategoryRequestDto.Post post);
+
+    Category categoryRequestDtoPatchToCategory(CategoryRequestDto.Patch patch);
+
     CategoryResponseDto.Response categoryToCategoryResponseDtoResponse(Category category);
 }

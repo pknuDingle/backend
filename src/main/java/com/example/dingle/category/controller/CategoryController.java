@@ -25,7 +25,7 @@ public class CategoryController {
     // Create
     @PostMapping
     public ResponseEntity postCategory(@Valid @RequestBody CategoryRequestDto.Post post) {
-        Category category = categoryService.createCategory(categoryMapper.categoryResponseDtoPostToCategory(post));
+        Category category = categoryService.createCategory(categoryMapper.categoryRequestDtoPostToCategory(post));
         CategoryResponseDto.Response response = categoryMapper.categoryToCategoryResponseDtoResponse(category);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -43,9 +43,9 @@ public class CategoryController {
     // Update
     @PutMapping("/{category-id}")
     public ResponseEntity patchCategory(@Positive @PathVariable("category-id") long categoryId,
-                                      @Valid @RequestBody CategoryRequestDto.Patch patch) {
+                                        @Valid @RequestBody CategoryRequestDto.Patch patch) {
         patch.setId(categoryId);
-        Category category = categoryService.updateCategory(categoryMapper.categoryResponseDtoPatchToCategory(patch));
+        Category category = categoryService.updateCategory(categoryMapper.categoryRequestDtoPatchToCategory(patch));
         CategoryResponseDto.Response response = categoryMapper.categoryToCategoryResponseDtoResponse(category);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);

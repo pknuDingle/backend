@@ -1,11 +1,14 @@
 package com.example.dingle.userCategory.service;
 
+import com.example.dingle.category.entity.Category;
 import com.example.dingle.exception.BusinessLogicException;
 import com.example.dingle.exception.ExceptionCode;
+import com.example.dingle.user.entity.User;
 import com.example.dingle.userCategory.entity.UserCategory;
 import com.example.dingle.userCategory.repository.UserCategoryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -15,7 +18,8 @@ public class UserCategoryService {
     private final UserCategoryRepository userCategoryRepository;
 
     // Create
-    public UserCategory createUserCategory(UserCategory userCategory) {
+    public UserCategory createUserCategory(User currentUser, Category category) {
+        UserCategory userCategory = category.toUserCategory(currentUser);
         return userCategoryRepository.save(userCategory);
     }
 
@@ -29,6 +33,11 @@ public class UserCategoryService {
     public void deleteUserCategory(long userCategoryId) {
         UserCategory userCategory = verifiedUserCategory(userCategoryId);
         userCategoryRepository.delete(userCategory);
+    }
+
+    @Transactional
+    public void deleteAllUserCategory(User currentUser) {
+        userCategoryRepository.deleteAllByUserId(currentUser.getId());
     }
 
     // 증명

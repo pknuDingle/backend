@@ -2,7 +2,6 @@ package com.example.dingle.user.service;
 
 import com.example.dingle.exception.BusinessLogicException;
 import com.example.dingle.exception.ExceptionCode;
-import com.example.dingle.user.dto.UserRequestDto;
 import com.example.dingle.user.entity.User;
 import com.example.dingle.user.repository.UserRepository;
 import com.example.dingle.util.FindUserByJWT;

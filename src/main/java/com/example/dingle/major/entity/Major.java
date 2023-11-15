@@ -2,6 +2,7 @@ package com.example.dingle.major.entity;
 
 import com.example.dingle.auditable.Auditable;
 import com.example.dingle.noticeMajor.entity.NoticeMajor;
+import com.example.dingle.user.entity.User;
 import com.example.dingle.userMajor.entity.UserMajor;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,4 +31,8 @@ public class Major extends Auditable {
 
     @OneToMany(mappedBy = "major", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<NoticeMajor> noticeMajors = new ArrayList<>();
+
+    public UserMajor toUserMajor(User user) {
+        return new UserMajor(user, this);
+    }
 }
