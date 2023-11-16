@@ -62,23 +62,25 @@ public class PknuCe {
     }
 
     // SSL 우회 등록
-    public static void setSSL() throws NoSuchAlgorithmException, KeyManagementException {
-        TrustManager[] trustAllCerts = new TrustManager[] {
+    public static void setSSL() throws Exception {
+        TrustManager[] trustAllCerts = {
                 new X509TrustManager() {
                     public X509Certificate[] getAcceptedIssuers() {
                         return null;
                     }
-                    public void checkClientTrusted(X509Certificate[] certs, String authType) {}
-                    public void checkServerTrusted(X509Certificate[] certs, String authType) {}
+
+                    public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                    }
+
+                    public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                    }
                 }
         };
+
         SSLContext sc = SSLContext.getInstance("SSL");
         sc.init(null, trustAllCerts, new SecureRandom());
-        HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-            @Override public boolean verify(String hostname, SSLSession session) {
-                return true;
-            }
-        });
+
+        HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
         HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
     }
 }
