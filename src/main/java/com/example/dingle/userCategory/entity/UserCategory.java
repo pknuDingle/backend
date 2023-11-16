@@ -3,6 +3,8 @@ package com.example.dingle.userCategory.entity;
 import com.example.dingle.auditable.Auditable;
 import com.example.dingle.category.entity.Category;
 import com.example.dingle.major.entity.Major;
+import com.example.dingle.notice.entity.Notice;
+import com.example.dingle.personalNotice.entity.PersonalNotice;
 import com.example.dingle.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,5 +34,9 @@ public class UserCategory extends Auditable {
     public UserCategory(User user, Category category) {
         this.user = user;
         this.category = category;
+    }
+
+    public PersonalNotice toPersonalNotice(Notice notice){
+        return new PersonalNotice(user, notice, category);
     }
 }
