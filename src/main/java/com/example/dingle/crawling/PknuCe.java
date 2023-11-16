@@ -3,7 +3,6 @@ package com.example.dingle.crawling;
 import com.example.dingle.category.repository.CategoryRepository;
 import com.example.dingle.notice.entity.Notice;
 import com.example.dingle.notice.repository.NoticeRepository;
-import com.example.dingle.noticeCategory.entity.NoticeCategory;
 import com.example.dingle.noticeCategory.repository.NoticeCategoryRepository;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -12,9 +11,6 @@ import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
 
 import javax.net.ssl.*;
-import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 
@@ -35,8 +31,8 @@ public class PknuCe {
     }
 
     // TODO: 다시 불러올 때, 새로운 공지사항만 추가해야 함.
-    public void pknuCeAllNoticeCrawling() throws NoSuchAlgorithmException, KeyManagementException, IOException {
-        if(pknuCeAllNoticeUrl.indexOf("https://")>=0){
+    public void pknuCeAllNoticeCrawling() throws Exception {
+        if (pknuCeAllNoticeUrl.indexOf("https://") >= 0) {
             PknuCe.setSSL();
         }
 
@@ -45,19 +41,19 @@ public class PknuCe {
 
         // 공지사항 리스트
         Elements notices = listConnection.get().select(".a_bdCont .a_brdList tbody tr:not(.noti)");
-        for(Element notice : notices){
+        for (Element notice : notices) {
             // 제목, 링크 가져오기
             String title = notice.select("td.bdlTitle a").text();
-            String link = pknuCeAllNoticeUrl+notice.select("td.bdlTitle a").attr("href");
-//            String date = notice.select("td.bdlDate").text();
+            String link = pknuCeAllNoticeUrl + notice.select("td.bdlTitle a").attr("href");
 
             // 링크를 통해 내용 일부 가져오기
             elementConnection = Jsoup.connect(link).header("Content-Type", "application/json;charset=UTF-8").userAgent(USER_AGENT).method(Connection.Method.GET).ignoreContentType(true);
-            String content = elementConnection.get().select("td.bdvEdit").text().substring(0, 81)+"...";
+            Document doc = Jsoup.parse(elementConnection.get().html());
+            String text = doc.select("td.bdvEdit").text();
+            String content = text.length() > 30 ? text.substring(0, 30) + "..." : text;
 
             // 저장
             Notice newNotice = noticeRepository.save(new Notice(title, content, link));
-            noticeCategoryRepository.save(new NoticeCategory(newNotice, categoryRepository.findById(1L).get()));
         }
     }
 
