@@ -10,7 +10,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -44,5 +46,13 @@ public class UserCategoryService {
     public UserCategory verifiedUserCategory(long userCategoryId) {
         Optional<UserCategory> userCategory = userCategoryRepository.findById(userCategoryId);
         return userCategory.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USERCATEGORY_NOT_FOUND));
+    }
+
+    public List<UserCategory> findUserCategoriesWithCategoryIds(List<Long> categoryIds) {
+        List<UserCategory> userCategories = categoryIds.stream()
+                .flatMap(categoryId -> userCategoryRepository.findAllByCategoryId(categoryId).stream())
+                .collect(Collectors.toList());
+
+        return userCategories;
     }
 }
