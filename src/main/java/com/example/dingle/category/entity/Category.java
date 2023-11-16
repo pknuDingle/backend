@@ -26,6 +26,7 @@ public class Category extends Auditable {
     @Column
     private String name;
 
+    @Enumerated(EnumType.STRING)
     @Column
     private CategoryType categoryType;
 
