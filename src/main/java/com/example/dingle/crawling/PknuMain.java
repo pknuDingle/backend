@@ -22,9 +22,10 @@ public class PknuMain {
     private final String PKNU_MAIN_URL = "https://www.pknu.ac.kr/main/163?action=view&no=";
     private final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36";
 
-    public Notice crawling() {
+    public Notice crawling(long pageNum) {
         Notice notice = new Notice();
-        String url = "https://www.pknu.ac.kr/main/163?action=view&no=712274";
+        String url = "https://www.pknu.ac.kr/main/163?action=view&no=" + pageNum;
+//        String url = "https://www.pknu.ac.kr/main/163?action=view&no=712274";
 //        String url = "https://www.pknu.ac.kr/main/163?action=view&no=712273";
         Document document;
 
@@ -43,6 +44,11 @@ public class PknuMain {
             Elements elementsTitle = document.getElementsByClass("title_b"); // 제목
             Elements elementsContent = document.select("div.bdvTxt"); // 내용
 
+            // 없는 페이지를 크롤링하는 경우
+            if(elementsTitle.isEmpty()) {
+                return null;
+            }
+
             String title = elementsTitle.get(0).text();
             String content = "";
 
@@ -51,10 +57,12 @@ public class PknuMain {
             }
 
             System.out.println("# " + content);
+            System.out.println("!! size : " + content.length());
 
             notice.setTitle(title);
             notice.setContent(content);
             notice.setLink(url);
+            notice.setPageNum(pageNum);
             notice.setImage("");
         } catch (IOException e) {
             e.printStackTrace();
@@ -86,6 +94,9 @@ public class PknuMain {
                 else content += splits[1];
             }
         }
+
+        // 첨부파일 제거
+        content = content.replace("$(function(){", "123123lkjlkj").split("123123lkjlkj")[0];
 
         return content.trim();
     }

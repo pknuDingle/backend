@@ -46,7 +46,7 @@ public class NoticeController {
         Notice notice = noticeService.findNotice(noticeId);
         NoticeResponseDto.Response response = noticeMapper.noticeToNoticeResponseDtoResponse(notice);
 
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     // Update
@@ -57,7 +57,7 @@ public class NoticeController {
         Notice notice = noticeService.updateNotice(noticeMapper.noticeResponseDtoPatchToNotice(patch));
         NoticeResponseDto.Response response = noticeMapper.noticeToNoticeResponseDtoResponse(notice);
 
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     // Delete

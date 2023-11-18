@@ -19,7 +19,7 @@ public class NoticeService {
     public Notice createNotice(Notice notice) {
         // 크롤링 테스트
         PknuMain pknuMain = new PknuMain();
-        notice = pknuMain.crawling();
+        notice = pknuMain.crawling(712274);
 
         return noticeRepository.save(notice);
     }

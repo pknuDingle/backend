@@ -25,8 +25,11 @@ public class Notice extends Auditable {
     @Column
     private String title;
 
-    @Column(length = 1000)
+    @Column(length = 5000)
     private String content;
+
+    @Column
+    private long pageNum;
 
     @Column
     private String image;
