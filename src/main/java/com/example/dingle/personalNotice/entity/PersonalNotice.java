@@ -1,6 +1,6 @@
 package com.example.dingle.personalNotice.entity;
 
-import com.example.dingle.category.entity.Category;
+import com.example.dingle.keyword.entity.Keyword;
 import com.example.dingle.notice.entity.Notice;
 import com.example.dingle.user.entity.User;
 import lombok.AllArgsConstructor;
@@ -29,12 +29,12 @@ public class PersonalNotice {
     private Notice notice;
 
     @OneToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @JoinColumn(name = "keyword_id")
+    private Keyword keyword;
 
-    public PersonalNotice(User user, Notice notice, Category category) {
+    public PersonalNotice(User user, Notice notice, Keyword keyword) {
         this.user = user;
         this.notice = notice;
-        this.category = category;
+        this.keyword = keyword;
     }
 }

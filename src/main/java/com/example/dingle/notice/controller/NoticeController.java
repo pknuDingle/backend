@@ -6,7 +6,7 @@ import com.example.dingle.notice.dto.NoticeResponseDto;
 import com.example.dingle.notice.entity.Notice;
 import com.example.dingle.notice.mapper.NoticeMapper;
 import com.example.dingle.notice.service.NoticeService;
-import com.example.dingle.noticeCategory.repository.NoticeCategoryRepository;
+import com.example.dingle.noticeKeyword.repository.NoticeKeywordRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +25,7 @@ import java.util.stream.Collectors;
 public class NoticeController {
     private final NoticeService noticeService;
     private final NoticeMapper noticeMapper;
-    private final NoticeCategoryRepository noticeCategoryRepository;
+    private final NoticeKeywordRepository noticeKeywordRepository;
     private final PknuCe pknuCe;
 
     // Create
@@ -68,11 +65,11 @@ public class NoticeController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/category")
-    public ResponseEntity getNotice(@RequestParam("categoryId") Long categoryId) throws NoSuchAlgorithmException, IOException, KeyManagementException {
+    @GetMapping("/keyword")
+    public ResponseEntity getNotice(@RequestParam("keywordId") Long keywordId) throws Exception {
 //        pknuCe.pknuCeAllNoticeCrawling();
-        List<NoticeResponseDto.Response> response = noticeCategoryRepository.findByCategory_Id(categoryId).stream()
-                .map(noticeCategory -> noticeCategory.getNotice())
+        List<NoticeResponseDto.Response> response = noticeKeywordRepository.findByKeywordId(keywordId).stream()
+                .map(noticeKeyword -> noticeKeyword.getNotice())
                 .map(notice -> noticeMapper.noticeToNoticeResponseDtoResponse(notice))
                 .collect(Collectors.toList());
 

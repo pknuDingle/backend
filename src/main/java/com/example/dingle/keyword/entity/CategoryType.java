@@ -1,4 +1,4 @@
-package com.example.dingle.category.entity;
+package com.example.dingle.keyword.entity;
 
 public enum CategoryType {
 

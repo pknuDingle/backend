@@ -1,11 +1,11 @@
-package com.example.dingle.category.dto;
+package com.example.dingle.keyword.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-public class CategoryRequestDto {
+public class KeywordRequestDto {
     @Getter
     @Setter
     @AllArgsConstructor

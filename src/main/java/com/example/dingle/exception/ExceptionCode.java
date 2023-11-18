@@ -10,11 +10,11 @@ public enum ExceptionCode {
     MAJOR_NOT_FOUND(404, "Major not found"),
     USERMAJOR_NOT_FOUND(404, "UserMajor not found"),
     NOTICEMAJOR_NOT_FOUND(404, "NoticeMajor not found"),
-    USERCATEGORY_NOT_FOUND(404, "UserCategory not found"),
+    USERKEYWORD_NOT_FOUND(404, "UserKeyword not found"),
     NOTICE_NOT_FOUND(404, "Notice not found"),
-    CATEGORY_NOT_FOUND(404, "Category not found"),
+    KEYWORD_NOT_FOUND(404, "Keyword not found"),
     JJIM_NOT_FOUND(404, "Jjim not found"),
-    NOTICECATEGORY_NOT_FOUND(404, "NoticeCategory not found");
+    NOTICEKEYWORD_NOT_FOUND(404, "NoticeKeyword not found");
 
 
     @Getter

@@ -41,8 +41,8 @@ public class JjimService {
     }
 
     // 증명
-    public Jjim verifiedJjim(long categoryId) {
-        Optional<Jjim> category = jjimRepository.findById(categoryId);
-        return category.orElseThrow(() -> new BusinessLogicException(ExceptionCode.JJIM_NOT_FOUND));
+    public Jjim verifiedJjim(long jjimId) {
+        Optional<Jjim> jjim = jjimRepository.findById(jjimId);
+        return jjim.orElseThrow(() -> new BusinessLogicException(ExceptionCode.JJIM_NOT_FOUND));
     }
 }

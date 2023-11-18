@@ -1,13 +1,13 @@
 package com.example.dingle.crawling;
 
-import com.example.dingle.category.repository.CategoryRepository;
+import com.example.dingle.keyword.repository.KeywordRepository;
 import com.example.dingle.notice.entity.Notice;
 import com.example.dingle.notice.repository.NoticeRepository;
-import com.example.dingle.noticeCategory.repository.NoticeCategoryRepository;
+import com.example.dingle.noticeKeyword.repository.NoticeKeywordRepository;
 import com.example.dingle.personalNotice.service.PersonalNoticeService;
-import com.example.dingle.userCategory.entity.UserCategory;
-import com.example.dingle.userCategory.repository.UserCategoryRepository;
-import com.example.dingle.userCategory.service.UserCategoryService;
+import com.example.dingle.userKeyword.entity.UserKeyword;
+import com.example.dingle.userKeyword.repository.UserKeywordRepository;
+import com.example.dingle.userKeyword.service.UserKeywordService;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -25,20 +25,20 @@ public class PknuCe {
     private final static String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36";
     private String pknuCeAllNoticeUrl = "https://ce.pknu.ac.kr/ce/1814";
     private final NoticeRepository noticeRepository;
-    private final NoticeCategoryRepository noticeCategoryRepository;
-    private final CategoryRepository categoryRepository;
+    private final NoticeKeywordRepository noticeKeywordRepository;
+    private final KeywordRepository keywordRepository;
     private final Filtering filtering;
-    private final UserCategoryService userCategoryService;
+    private final UserKeywordService userKeywordService;
     private final PersonalNoticeService personalNoticeService;
 
     public PknuCe(NoticeRepository noticeRepository,
-                  NoticeCategoryRepository noticeCategoryRepository,
-                  CategoryRepository categoryRepository, Filtering filtering, PersonalNoticeService personalNoticeService, UserCategoryRepository userCategoryRepository, UserCategoryService userCategoryService, PersonalNoticeService personalNoticeService1) {
+                  NoticeKeywordRepository noticeKeywordRepository,
+                  KeywordRepository keywordRepository, Filtering filtering, PersonalNoticeService personalNoticeService, UserKeywordRepository userKeywordRepository, UserKeywordService userKeywordService, PersonalNoticeService personalNoticeService1) {
         this.noticeRepository = noticeRepository;
-        this.noticeCategoryRepository = noticeCategoryRepository;
-        this.categoryRepository = categoryRepository;
+        this.noticeKeywordRepository = noticeKeywordRepository;
+        this.keywordRepository = keywordRepository;
         this.filtering = filtering;
-        this.userCategoryService = userCategoryService;
+        this.userKeywordService = userKeywordService;
         this.personalNoticeService = personalNoticeService1;
     }
 
@@ -68,9 +68,9 @@ public class PknuCe {
             Notice newNotice = noticeRepository.save(new Notice(title, content, link));
 
             // 키워드 기반 필터링(제목에서 키워드 추출 -> 키워드 설정한 user에게 알림 전송)
-            List<Long> categoryIds = filtering.filterKeywordsInTitle(title);
-            List<UserCategory> userCategories = userCategoryService.findUserCategoriesWithCategoryIds(categoryIds);
-            personalNoticeService.createPersonalNotices(userCategories, newNotice);
+            List<Long> keywordIds = filtering.filterKeywordsInTitle(title);
+            List<UserKeyword> userKeywords = userKeywordService.findUserKeywordsWithKeywordIds(keywordIds);
+            personalNoticeService.createPersonalNotices(userKeywords, newNotice);
             // TODO: 알림 전송
         }
     }

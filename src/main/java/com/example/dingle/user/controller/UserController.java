@@ -1,10 +1,10 @@
 package com.example.dingle.user.controller;
 
-import com.example.dingle.category.dto.CategoryRequestDto;
-import com.example.dingle.category.dto.CategoryResponseDto;
-import com.example.dingle.category.entity.Category;
-import com.example.dingle.category.mapper.CategoryMapper;
-import com.example.dingle.category.service.CategoryService;
+import com.example.dingle.keyword.dto.KeywordRequestDto;
+import com.example.dingle.keyword.dto.KeywordResponseDto;
+import com.example.dingle.keyword.entity.Keyword;
+import com.example.dingle.keyword.mapper.KeywordMapper;
+import com.example.dingle.keyword.service.KeywordService;
 import com.example.dingle.major.dto.MajorRequestDto;
 import com.example.dingle.major.dto.MajorResponseDto;
 import com.example.dingle.major.entity.Major;
@@ -15,7 +15,7 @@ import com.example.dingle.user.dto.UserResponseDto;
 import com.example.dingle.user.entity.User;
 import com.example.dingle.user.mapper.UserMapper;
 import com.example.dingle.user.service.UserService;
-import com.example.dingle.userCategory.service.UserCategoryService;
+import com.example.dingle.userKeyword.service.UserKeywordService;
 import com.example.dingle.userMajor.service.UserMajorService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,9 +35,9 @@ import java.util.stream.Collectors;
 public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
-    private final CategoryService categoryService;
-    private final CategoryMapper categoryMapper;
-    private final UserCategoryService userCategoryService;
+    private final KeywordService keywordService;
+    private final KeywordMapper keywordMapper;
+    private final UserKeywordService userKeywordService;
     private final UserMajorService userMajorService;
     private final MajorMapper majorMapper;
     private final MajorService majorService;
@@ -92,24 +92,24 @@ public class UserController {
     }
 
     @GetMapping("/keywords")
-    public ResponseEntity<List<CategoryResponseDto.Response>> getAllKeywords() {
-        List<Category> categories = categoryService.findAllCategories();
-        List<CategoryResponseDto.Response> response = categories.stream()
-                .map(categoryMapper::categoryToCategoryResponseDtoResponse)
+    public ResponseEntity<List<KeywordResponseDto.Response>> getAllKeywords() {
+        List<Keyword> categories = keywordService.findAllKeywords();
+        List<KeywordResponseDto.Response> response = categories.stream()
+                .map(keywordMapper::keywordToKeywordResponseDtoResponse)
                 .collect(Collectors.toList());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/keywords")
-    public ResponseEntity setKeyword(@Valid @RequestBody List<CategoryRequestDto.Post> posts) {
+    public ResponseEntity setKeyword(@Valid @RequestBody List<KeywordRequestDto.Post> posts) {
         User currentUser = userService.findUser();
 
-        userCategoryService.deleteAllUserCategory(currentUser);
-        List<Category> categories = posts.stream()
-                .map(post -> categoryMapper.categoryRequestDtoPostToCategory(post))
+        userKeywordService.deleteAllUserKeyword(currentUser);
+        List<Keyword> keywords = posts.stream()
+                .map(post -> keywordMapper.keywordRequestDtoPostToKeyword(post))
                 .collect(Collectors.toList());
-        categories.forEach(category -> userCategoryService.createUserCategory(currentUser, category));
+        keywords.forEach(keyword -> userKeywordService.createUserKeyword(currentUser, keyword));
 
         return new ResponseEntity(HttpStatus.CREATED);
     }
