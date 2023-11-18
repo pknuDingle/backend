@@ -7,9 +7,8 @@ import java.util.Arrays;
 
 public enum ExceptionCode {
     USER_NOT_FOUND(404, "User not found"),
-    MAJOR_NOT_FOUND(404, "Major not found"),
-    USERMAJOR_NOT_FOUND(404, "UserMajor not found"),
-    NOTICEMAJOR_NOT_FOUND(404, "NoticeMajor not found"),
+    HOMEPAGE_NOT_FOUND(404, "Homepage not found"),
+    USERHOMEPAGE_NOT_FOUND(404, "UserHomepage not found"),
     USERKEYWORD_NOT_FOUND(404, "UserKeyword not found"),
     NOTICE_NOT_FOUND(404, "Notice not found"),
     KEYWORD_NOT_FOUND(404, "Keyword not found"),

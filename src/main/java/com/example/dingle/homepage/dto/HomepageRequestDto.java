@@ -1,12 +1,11 @@
-package com.example.dingle.major.dto;
+package com.example.dingle.homepage.dto;
 
-import com.example.dingle.major.entity.Major;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-public class MajorRequestDto {
+public class HomepageRequestDto {
     @Getter
     @Setter
     @AllArgsConstructor
@@ -14,6 +13,7 @@ public class MajorRequestDto {
     public static class Post {
         private long id;
         private String name;
+        private String url;
     }
 
     @Getter
@@ -23,5 +23,6 @@ public class MajorRequestDto {
     public static class Patch {
         private long id;
         private String name;
+        private String url;
     }
 }

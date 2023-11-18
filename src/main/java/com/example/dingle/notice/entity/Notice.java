@@ -1,8 +1,8 @@
 package com.example.dingle.notice.entity;
 
 import com.example.dingle.auditable.Auditable;
+import com.example.dingle.homepage.entity.Homepage;
 import com.example.dingle.noticeKeyword.entity.NoticeKeyword;
-import com.example.dingle.noticeMajor.entity.NoticeMajor;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,8 +37,9 @@ public class Notice extends Auditable {
     @Column
     private String link;
 
-    @OneToMany(mappedBy = "notice", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<NoticeMajor> noticeMajors = new ArrayList<>();
+    @OneToOne
+    @JoinColumn(name = "HOMEPAGE_ID")
+    private Homepage homepage;
 
     @OneToMany(mappedBy = "notice", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<NoticeKeyword> noticeKeywords = new ArrayList<>();

@@ -1,8 +1,7 @@
-package com.example.dingle.noticeMajor.entity;
+package com.example.dingle.userHomepage.entity;
 
 import com.example.dingle.auditable.Auditable;
-import com.example.dingle.major.entity.Major;
-import com.example.dingle.notice.entity.Notice;
+import com.example.dingle.homepage.entity.Homepage;
 import com.example.dingle.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,16 +15,21 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class NoticeMajor extends Auditable {
+public class UserHomepage extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "MAJOR_ID")
-    private Major major;
+    @JoinColumn(name = "USER_ID")
+    private User user;
 
     @ManyToOne
-    @JoinColumn(name = "NOTICE_ID")
-    private Notice notice;
+    @JoinColumn(name = "HOMEPAGE_ID")
+    private Homepage homepage;
+
+    public UserHomepage(User user, Homepage homepage) {
+        this.user = user;
+        this.homepage = homepage;
+    }
 }
