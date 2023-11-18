@@ -1,10 +1,7 @@
-package com.example.dingle.userCategory.entity;
+package com.example.dingle.personalNotice.entity;
 
-import com.example.dingle.auditable.Auditable;
 import com.example.dingle.category.entity.Category;
-import com.example.dingle.major.entity.Major;
 import com.example.dingle.notice.entity.Notice;
-import com.example.dingle.personalNotice.entity.PersonalNotice;
 import com.example.dingle.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,25 +15,26 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class UserCategory extends Auditable {
+public class PersonalNotice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne
-    @JoinColumn(name = "USER_ID")
+    @OneToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "CATEGORY_ID")
+    @OneToOne
+    @JoinColumn(name = "notice_id")
+    private Notice notice;
+
+    @OneToOne
+    @JoinColumn(name = "category_id")
     private Category category;
 
-    public UserCategory(User user, Category category) {
+    public PersonalNotice(User user, Notice notice, Category category) {
         this.user = user;
+        this.notice = notice;
         this.category = category;
-    }
-
-    public PersonalNotice toPersonalNotice(Notice notice){
-        return new PersonalNotice(user, notice, category);
     }
 }
