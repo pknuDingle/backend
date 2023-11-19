@@ -1,6 +1,7 @@
 package com.example.dingle.homepage.entity;
 
 import com.example.dingle.auditable.Auditable;
+import com.example.dingle.notice.entity.Notice;
 import com.example.dingle.user.entity.User;
 import com.example.dingle.userHomepage.entity.UserHomepage;
 import lombok.AllArgsConstructor;
@@ -30,6 +31,9 @@ public class Homepage extends Auditable {
 
     @OneToMany(mappedBy = "homepage", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<UserHomepage> userHomepages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "homepage", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Notice> notices = new ArrayList<>();
 
     public UserHomepage toUserHomepage(User user) {
         return new UserHomepage(user, this);
