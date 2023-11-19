@@ -1,6 +1,11 @@
 package com.example.dingle.crawling;
 
+import com.example.dingle.homepage.entity.Homepage;
+import com.example.dingle.homepage.service.HomepageService;
+import com.example.dingle.keyword.entity.Keyword;
 import com.example.dingle.notice.entity.Notice;
+import com.example.dingle.noticeKeyword.entity.NoticeKeyword;
+import com.example.dingle.noticeKeyword.service.NoticeKeywordService;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.*;
@@ -16,11 +21,22 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class PknuMain {
     private final String PKNU_MAIN_URL = "https://www.pknu.ac.kr/main/163?action=view&no=";
     private final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36";
+
+    private final String HOMEPAGE_NAME = "부경대학교 메인홈페이지";
+
+    private final String HOMEPAGE_URL = "https://www.pknu.ac.kr/main/163";
+
+    private final HomepageService homepageService;
+
+    public PknuMain(HomepageService homepageService) {
+        this.homepageService = homepageService;
+    }
 
     public Notice crawling(long pageNum) {
         Notice notice = new Notice();
@@ -44,7 +60,7 @@ public class PknuMain {
             Elements elementsTitle = document.getElementsByClass("title_b"); // 제목
             Elements elementsContent = document.select("div.bdvTxt"); // 내용
 
-            // 없는 페이지를 크롤링하는 경우
+            // 없는 페이지를 크롤링하는 경우 -> null 반환
             if(elementsTitle.isEmpty()) {
                 return null;
             }
@@ -56,14 +72,20 @@ public class PknuMain {
                 content += getContent(element);
             }
 
-            System.out.println("# " + content);
-            System.out.println("!! size : " + content.length());
+//            System.out.println("# " + content);
+//            System.out.println("!! size : " + content.length());
 
+            // 공지사항 기본 설정
             notice.setTitle(title);
             notice.setContent(content);
             notice.setLink(url);
             notice.setPageNum(pageNum);
             notice.setImage("");
+
+            // 홈페이지와의 연관관계 생성
+            // 부경대 메인 홈페이지 객체 찾기
+            Homepage homepage = findPknuMainHomepage();
+            notice.setHomepage(homepage);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {
@@ -73,6 +95,23 @@ public class PknuMain {
         }
 
         return notice;
+    }
+
+    // 연관관계 있는 홈페이지 반환
+    public Homepage findPknuMainHomepage() {
+        List<Homepage> homepages = homepageService.findAllHomepages();
+        Homepage mainHomepage = null;
+        for(Homepage homepage : homepages) {
+            if(homepage.getName().equals(HOMEPAGE_NAME)) mainHomepage = homepage;
+        }
+        if(mainHomepage == null) { // 부경대 메인 홈페이지가 없는 경우 -> 새로 생성하기
+            mainHomepage = new Homepage();
+            mainHomepage.setName(HOMEPAGE_NAME);
+            mainHomepage.setUrl(HOMEPAGE_URL);
+            mainHomepage = homepageService.createHomepage(mainHomepage);
+        }
+
+        return mainHomepage;
     }
 
     // content 분류
