@@ -1,7 +1,9 @@
-package com.example.dingle.personalNotice.entity;
+package com.example.dingle.userKeyword.entity;
 
+import com.example.dingle.auditable.Auditable;
 import com.example.dingle.keyword.entity.Keyword;
 import com.example.dingle.notice.entity.Notice;
+import com.example.dingle.personalNotice.entity.PersonalNotice;
 import com.example.dingle.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,26 +17,25 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class PersonalNotice {
+public class UserKeyword extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne
+    @JoinColumn(name = "USER_ID")
     private User user;
 
-    @OneToOne
-    @JoinColumn(name = "notice_id")
-    private Notice notice;
-
-    @OneToOne
-    @JoinColumn(name = "keyword_id")
+    @ManyToOne
+    @JoinColumn(name = "KEYWORD_ID")
     private Keyword keyword;
 
-    public PersonalNotice(User user, Notice notice, Keyword keyword) {
+    public UserKeyword(User user, Keyword keyword) {
         this.user = user;
-        this.notice = notice;
         this.keyword = keyword;
+    }
+
+    public PersonalNotice toPersonalNotice(Notice notice){
+        return new PersonalNotice(user, notice, keyword);
     }
 }
