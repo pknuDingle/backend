@@ -1,9 +1,11 @@
 package com.example.dingle.crawling;
 
+import com.example.dingle.keyword.entity.Keyword;
 import com.example.dingle.keyword.repository.KeywordRepository;
 import com.example.dingle.notice.entity.Notice;
 import com.example.dingle.notice.repository.NoticeRepository;
 import com.example.dingle.noticeKeyword.repository.NoticeKeywordRepository;
+import com.example.dingle.noticeKeyword.service.NoticeKeywordService;
 import com.example.dingle.personalNotice.service.PersonalNoticeService;
 import com.example.dingle.userKeyword.entity.UserKeyword;
 import com.example.dingle.userKeyword.repository.UserKeywordRepository;
@@ -30,19 +32,20 @@ public class PknuCe {
     private final Filtering filtering;
     private final UserKeywordService userKeywordService;
     private final PersonalNoticeService personalNoticeService;
+    private final NoticeKeywordService noticeKeywordService;
 
     public PknuCe(NoticeRepository noticeRepository,
                   NoticeKeywordRepository noticeKeywordRepository,
-                  KeywordRepository keywordRepository, Filtering filtering, PersonalNoticeService personalNoticeService, UserKeywordRepository userKeywordRepository, UserKeywordService userKeywordService, PersonalNoticeService personalNoticeService1) {
+                  KeywordRepository keywordRepository, Filtering filtering, PersonalNoticeService personalNoticeService, UserKeywordRepository userKeywordRepository, UserKeywordService userKeywordService, PersonalNoticeService personalNoticeService1, NoticeKeywordService noticeKeywordService) {
         this.noticeRepository = noticeRepository;
         this.noticeKeywordRepository = noticeKeywordRepository;
         this.keywordRepository = keywordRepository;
         this.filtering = filtering;
         this.userKeywordService = userKeywordService;
         this.personalNoticeService = personalNoticeService1;
+        this.noticeKeywordService = noticeKeywordService;
     }
 
-    // TODO: 다시 불러올 때, 새로운 공지사항만 추가해야 함.
     public void pknuCeAllNoticeCrawling() throws Exception {
         if (pknuCeAllNoticeUrl.indexOf("https://") >= 0) {
             PknuCe.setSSL();
@@ -51,10 +54,15 @@ public class PknuCe {
         Connection listConnection, elementConnection;
         listConnection = Jsoup.connect(pknuCeAllNoticeUrl).header("Content-Type", "application/json;charset=UTF-8").userAgent(USER_AGENT).method(Connection.Method.GET).ignoreContentType(true);
 
+        // db에 저장된 가장 최신 공지사항 번호
+        Long latestNoticeNum = noticeRepository.findLatestNoticeNum();
+
         // 공지사항 리스트
         Elements notices = listConnection.get().select(".a_bdCont .a_brdList tbody tr:not(.noti)");
         for (Element notice : notices) {
-            // 제목, 링크 가져오기
+            // 번호, 제목, 링크 가져오기
+            Long noticeNum = Long.valueOf(notice.select("td.bdlNum.noti").text());
+            if (noticeNum <= latestNoticeNum) continue; // db에 저장된 가장 최신 공지사항 번호보다 크롤링한 공지사항 번호가 작은 경우 패스
             String title = notice.select("td.bdlTitle a").text();
             String link = pknuCeAllNoticeUrl + notice.select("td.bdlTitle a").attr("href");
 
@@ -65,11 +73,12 @@ public class PknuCe {
             String content = text.length() > 30 ? text.substring(0, 30) + "..." : text;
 
             // 저장
-            Notice newNotice = noticeRepository.save(new Notice(title, content, link));
+            Notice newNotice = noticeRepository.save(new Notice(title, content, link, noticeNum));
 
             // 키워드 기반 필터링(제목, 내용에서 키워드 추출 -> 키워드 설정한 user에게 알림 전송)
-            List<Long> keywordIds = filtering.filterKeywords(title, content);
-            List<UserKeyword> userKeywords = userKeywordService.findUserKeywordsWithKeywordIds(keywordIds);
+            List<Keyword> keywords = filtering.filterKeywordsReturnKeyWord(title, content);
+            noticeKeywordService.createNoticeKeyword(newNotice, keywords);
+            List<UserKeyword> userKeywords = userKeywordService.findUserKeywordsWithKeywords(keywords);
             personalNoticeService.createPersonalNotices(userKeywords, newNotice);
             // TODO: 알림 전송
         }

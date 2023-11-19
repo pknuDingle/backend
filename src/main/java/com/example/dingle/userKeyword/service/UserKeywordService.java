@@ -48,9 +48,9 @@ public class UserKeywordService {
         return userKeyword.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USERKEYWORD_NOT_FOUND));
     }
 
-    public List<UserKeyword> findUserKeywordsWithKeywordIds(List<Long> keywordIds) {
-        List<UserKeyword> userKeywords = keywordIds.stream()
-                .flatMap(keywordId -> userKeywordRepository.findAllByKeywordId(keywordId).stream())
+    public List<UserKeyword> findUserKeywordsWithKeywords(List<Keyword> keywords) {
+        List<UserKeyword> userKeywords = keywords.stream()
+                .flatMap(keyword -> userKeywordRepository.findAllByKeyword(keyword).stream())
                 .collect(Collectors.toList());
 
         return userKeywords;
