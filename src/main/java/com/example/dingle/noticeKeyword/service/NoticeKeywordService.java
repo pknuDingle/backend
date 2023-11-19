@@ -2,11 +2,14 @@ package com.example.dingle.noticeKeyword.service;
 
 import com.example.dingle.exception.BusinessLogicException;
 import com.example.dingle.exception.ExceptionCode;
+import com.example.dingle.keyword.entity.Keyword;
+import com.example.dingle.notice.entity.Notice;
 import com.example.dingle.noticeKeyword.entity.NoticeKeyword;
 import com.example.dingle.noticeKeyword.repository.NoticeKeywordRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,6 +20,15 @@ public class NoticeKeywordService {
     // Create
     public NoticeKeyword createNoticeKeyword(NoticeKeyword noticeKeyword) {
         return noticeKeywordRepository.save(noticeKeyword);
+    }
+
+    public void createNoticeKeyword(Notice notice, List<Keyword> keywords) {
+        for(Keyword keyword : keywords) {
+            NoticeKeyword noticeKeyword = new NoticeKeyword();
+            noticeKeyword.setKeyword(keyword);
+            noticeKeyword.setNotice(notice);
+            noticeKeywordRepository.save(noticeKeyword);
+        }
     }
 
     // Read

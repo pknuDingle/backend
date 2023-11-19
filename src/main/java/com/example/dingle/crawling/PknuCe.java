@@ -67,8 +67,8 @@ public class PknuCe {
             // 저장
             Notice newNotice = noticeRepository.save(new Notice(title, content, link));
 
-            // 키워드 기반 필터링(제목에서 키워드 추출 -> 키워드 설정한 user에게 알림 전송)
-            List<Long> keywordIds = filtering.filterKeywordsInTitle(title);
+            // 키워드 기반 필터링(제목, 내용에서 키워드 추출 -> 키워드 설정한 user에게 알림 전송)
+            List<Long> keywordIds = filtering.filterKeywords(title, content);
             List<UserKeyword> userKeywords = userKeywordService.findUserKeywordsWithKeywordIds(keywordIds);
             personalNoticeService.createPersonalNotices(userKeywords, newNotice);
             // TODO: 알림 전송
