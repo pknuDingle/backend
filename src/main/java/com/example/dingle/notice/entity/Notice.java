@@ -37,7 +37,7 @@ public class Notice extends Auditable {
     @Column
     private String link;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "HOMEPAGE_ID")
     private Homepage homepage;
 
