@@ -32,6 +32,9 @@ public class Notice extends Auditable {
     private Long pageNum;
 
     @Column
+    private Long noticeNum;
+
+    @Column
     private String image;
 
     @Column
@@ -48,5 +51,12 @@ public class Notice extends Auditable {
         this.title = title;
         this.content = content;
         this.link = link;
+    }
+
+    public Notice(String title, String content, String link, Long noticeNum) {
+        this.title = title;
+        this.content = content;
+        this.link = link;
+        this.noticeNum = noticeNum;
     }
 }
