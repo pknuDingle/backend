@@ -9,5 +9,5 @@ import org.mapstruct.Mapper;
 public interface NoticeMapper {
     Notice noticeResponseDtoPostToNotice(NoticeRequestDto.Post post);
     Notice noticeResponseDtoPatchToNotice(NoticeRequestDto.Patch patch);
-    NoticeResponseDto.Response noticeToNoticeResponseDtoResponse(Notice notice);
+    NoticeResponseDto.Response noticeToNoticeResponseDtoResponse(Notice notice, boolean isFavorite);
 }

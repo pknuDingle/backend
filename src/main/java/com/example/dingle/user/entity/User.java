@@ -1,6 +1,7 @@
 package com.example.dingle.user.entity;
 
 import com.example.dingle.auditable.Auditable;
+import com.example.dingle.jjim.entity.Jjim;
 import com.example.dingle.userKeyword.entity.UserKeyword;
 import com.example.dingle.userHomepage.entity.UserHomepage;
 import lombok.AllArgsConstructor;
@@ -55,4 +56,7 @@ public class User extends Auditable {
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<UserKeyword> userKeywords = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Jjim> jjims = new ArrayList<>();
 }

@@ -3,8 +3,12 @@ package com.example.dingle.notice.service;
 import com.example.dingle.crawling.PknuMain;
 import com.example.dingle.exception.BusinessLogicException;
 import com.example.dingle.exception.ExceptionCode;
+import com.example.dingle.jjim.entity.Jjim;
+import com.example.dingle.jjim.service.JjimService;
 import com.example.dingle.notice.entity.Notice;
 import com.example.dingle.notice.repository.NoticeRepository;
+import com.example.dingle.user.entity.User;
+import com.example.dingle.util.FindUserByJWT;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

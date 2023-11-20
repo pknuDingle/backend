@@ -4,6 +4,7 @@ import com.example.dingle.exception.BusinessLogicException;
 import com.example.dingle.exception.ExceptionCode;
 import com.example.dingle.homepage.entity.Homepage;
 import com.example.dingle.homepage.repository.HomepageRepository;
+import com.example.dingle.notice.entity.Notice;
 import com.example.dingle.user.entity.User;
 import com.example.dingle.userHomepage.entity.UserHomepage;
 import com.example.dingle.userHomepage.service.UserHomepageService;
@@ -30,6 +31,10 @@ public class HomepageService {
     // Read
     public Homepage findHomepage(long homepageId) {
         return verifiedHomepage(homepageId);
+    }
+
+    public List<Notice> findHomepageToNotice(long homepageId) {
+        return verifiedHomepage(homepageId).getNotices();
     }
 
     public List<Homepage> findAllHomepages() {
