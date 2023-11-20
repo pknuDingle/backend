@@ -36,6 +36,12 @@ public class HomepageService {
         return homepageRepository.findAll();
     }
 
+    public List<Homepage> findAllHomepagesByUser() {
+        User user = findUserByJWT.getLoginUser();
+        List<Homepage> homepages = userHomepageService.findHomepageByUser(user);
+        return homepages;
+    }
+
     // Update
     public Homepage updateHomepage(Homepage homepage) {
         Homepage findHomepage = verifiedHomepage(homepage.getId());

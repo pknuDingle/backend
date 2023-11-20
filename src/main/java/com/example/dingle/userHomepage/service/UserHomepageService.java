@@ -50,8 +50,8 @@ public class UserHomepageService {
         return verifiedUserHomepage(userHomepageId);
     }
 
-    public List<UserHomepage> findUserHomepage(User user) {
-        return userHomepageRepository.findAllByUser(user);
+    public List<Homepage> findHomepageByUser(User user) {
+        return userHomepageRepository.findAllByUser(user).stream().map(UserHomepage::getHomepage).collect(Collectors.toList());
     }
 
     // Delete

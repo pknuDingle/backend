@@ -38,7 +38,7 @@ public class HomepageController {
         Homepage homepage = homepageService.findHomepage(homepageId);
         HomepageResponseDto.Response response = homepageMapper.homepageToHomepageResponseDtoResponse(homepage);
 
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/all")
@@ -46,10 +46,16 @@ public class HomepageController {
         List<Homepage> homepages = homepageService.findAllHomepages();
         List<HomepageResponseDto.Response> responses = homepageMapper.ListhomepageToListHomepageResponseDtoResponse(homepages);
 
-        return new ResponseEntity<>(responses, HttpStatus.CREATED);
+        return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
+    @GetMapping
+    public ResponseEntity getHomepagesByUser() {
+        List<Homepage> homepages = homepageService.findAllHomepagesByUser();
+        List<HomepageResponseDto.Response> responses = homepageMapper.ListhomepageToListHomepageResponseDtoResponse(homepages);
 
+        return new ResponseEntity<>(responses, HttpStatus.OK);
+    }
 
     // Update
     @PutMapping("/{homepage-id}")
@@ -59,7 +65,7 @@ public class HomepageController {
         Homepage homepage = homepageService.updateHomepage(homepageMapper.homepageRequestDtoPatchToHomepage(patch));
         HomepageResponseDto.Response response = homepageMapper.homepageToHomepageResponseDtoResponse(homepage);
 
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     // user가 관심있는 homepage 등록
