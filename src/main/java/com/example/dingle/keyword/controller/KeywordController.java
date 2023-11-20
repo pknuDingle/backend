@@ -14,6 +14,16 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 
+
+
+
+
+
+
+
+
+import java.util.List;
+
 @RestController
 @RequestMapping("/keyword")
 @Validated
@@ -40,6 +50,14 @@ public class KeywordController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity getKeywords() {
+        List<Keyword> keywords = keywordService.findAllKeywords();
+        List<KeywordResponseDto.Response> responses = keywordMapper.listKeywordToListKeywordResponseDtoResponse(keywords);
+
+        return new ResponseEntity<>(responses, HttpStatus.CREATED);
+    }
+
     // Update
     @PutMapping("/{keyword-id}")
     public ResponseEntity patchKeyword(@Positive @PathVariable("keyword-id") long keywordId,
@@ -49,6 +67,12 @@ public class KeywordController {
         KeywordResponseDto.Response response = keywordMapper.keywordToKeywordResponseDtoResponse(keyword);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @PutMapping
+    public ResponseEntity patchKeyword(@Valid @RequestBody KeywordRequestDto.PatchUser patch) {
+        keywordService.updateKeyword(patch.getKeywords());
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     // Delete
