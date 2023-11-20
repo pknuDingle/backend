@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.util.List;
 
 @RestController
 @RequestMapping("/homepage")
@@ -40,6 +41,16 @@ public class HomepageController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity getHomepagse() {
+        List<Homepage> homepages = homepageService.findAllHomepages();
+        List<HomepageResponseDto.Response> responses = homepageMapper.ListhomepageToListHomepageResponseDtoResponse(homepages);
+
+        return new ResponseEntity<>(responses, HttpStatus.CREATED);
+    }
+
+
+
     // Update
     @PutMapping("/{homepage-id}")
     public ResponseEntity patchHomepage(@Positive @PathVariable("homepage-id") long homepageId,
@@ -49,6 +60,13 @@ public class HomepageController {
         HomepageResponseDto.Response response = homepageMapper.homepageToHomepageResponseDtoResponse(homepage);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    // user가 관심있는 homepage 등록
+    @PutMapping
+    public ResponseEntity patchHomepage(@Valid @RequestBody HomepageRequestDto.PatchUser patch) {
+        homepageService.updateHomepage(patch.getHomepageIds());
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     // Delete

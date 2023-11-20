@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 public class HomepageRequestDto {
     @Getter
     @Setter
@@ -24,5 +26,14 @@ public class HomepageRequestDto {
         private long id;
         private String name;
         private String url;
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class PatchUser {
+        private long id;
+        private List<Long> homepageIds;
     }
 }
