@@ -10,4 +10,11 @@ public interface JjimMapper {
     Jjim jjimResponseDtoPostToJjim(JjimRequestDto.Post post);
     Jjim jjimResponseDtoPatchToJjim(JjimRequestDto.Patch patch);
     JjimResponseDto.Response jjimToJjimResponseDtoResponse(Jjim jjim);
+    default JjimResponseDto.Response jjimToJjimResponseDtoResponseCustom(Jjim jjim) {
+        JjimResponseDto.Response response = this.jjimToJjimResponseDtoResponse(jjim);
+        response.setUserId(jjim.getUser().getId());
+        response.setNoticeId(jjim.getNotice().getId());
+
+        return response;
+    }
 }

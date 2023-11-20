@@ -14,5 +14,6 @@ public class NoticeResponseDto {
         private String content;
         private String image;
         private String link;
+        private boolean isFavorite = false;
     }
 }

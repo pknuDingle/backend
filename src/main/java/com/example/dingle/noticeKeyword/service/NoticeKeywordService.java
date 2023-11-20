@@ -6,6 +6,7 @@ import com.example.dingle.keyword.entity.Keyword;
 import com.example.dingle.notice.entity.Notice;
 import com.example.dingle.noticeKeyword.entity.NoticeKeyword;
 import com.example.dingle.noticeKeyword.repository.NoticeKeywordRepository;
+import com.example.dingle.user.entity.User;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,10 @@ public class NoticeKeywordService {
     // Read
     public NoticeKeyword findNoticeKeyword(long noticeKeywordId) {
         return verifiedNoticeKeyword(noticeKeywordId);
+    }
+
+    public List<NoticeKeyword> findNoticeKeywords(User user) {
+        return noticeKeywordRepository.findByKeyword_UserKeywords_User(user);
     }
 
     // Update

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.util.List;
 
 @RestController
 @RequestMapping("/homepage")
@@ -37,7 +38,23 @@ public class HomepageController {
         Homepage homepage = homepageService.findHomepage(homepageId);
         HomepageResponseDto.Response response = homepageMapper.homepageToHomepageResponseDtoResponse(homepage);
 
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity getHomepagse() {
+        List<Homepage> homepages = homepageService.findAllHomepages();
+        List<HomepageResponseDto.Response> responses = homepageMapper.ListhomepageToListHomepageResponseDtoResponse(homepages);
+
+        return new ResponseEntity<>(responses, HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity getHomepagesByUser() {
+        List<Homepage> homepages = homepageService.findAllHomepagesByUser();
+        List<HomepageResponseDto.Response> responses = homepageMapper.ListhomepageToListHomepageResponseDtoResponse(homepages);
+
+        return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
     // Update
@@ -48,7 +65,14 @@ public class HomepageController {
         Homepage homepage = homepageService.updateHomepage(homepageMapper.homepageRequestDtoPatchToHomepage(patch));
         HomepageResponseDto.Response response = homepageMapper.homepageToHomepageResponseDtoResponse(homepage);
 
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    // user가 관심있는 homepage 등록
+    @PutMapping
+    public ResponseEntity patchHomepage(@Valid @RequestBody HomepageRequestDto.PatchUser patch) {
+        homepageService.updateHomepage(patch.getHomepageIds());
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     // Delete

@@ -61,7 +61,7 @@ public class UserController {
         User user = userService.findUser(userId);
         UserResponseDto.Response response = userMapper.userToUserResponseDtoResponse(user);
 
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping
@@ -69,7 +69,7 @@ public class UserController {
         User user = userService.findUser();
         UserResponseDto.Response response = userMapper.userToUserResponseDtoResponse(user);
 
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     // Update
@@ -80,7 +80,7 @@ public class UserController {
         User user = userService.updateUser(userMapper.userResponseDtoPatchToUser(patch));
         UserResponseDto.Response response = userMapper.userToUserResponseDtoResponse(user);
 
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     // Delete

@@ -20,11 +20,11 @@ public class Jjim extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "NOTICE_ID")
     private Notice notice;
 }

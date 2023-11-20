@@ -14,6 +14,16 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 
+
+
+
+
+
+
+
+
+import java.util.List;
+
 @RestController
 @RequestMapping("/keyword")
 @Validated
@@ -37,7 +47,23 @@ public class KeywordController {
         Keyword keyword = keywordService.findKeyword(keywordId);
         KeywordResponseDto.Response response = keywordMapper.keywordToKeywordResponseDtoResponse(keyword);
 
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity getKeywords() {
+        List<Keyword> keywords = keywordService.findAllKeywords();
+        List<KeywordResponseDto.Response> responses = keywordMapper.listKeywordToListKeywordResponseDtoResponse(keywords);
+
+        return new ResponseEntity<>(responses, HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity getKeywordsByUser() {
+        List<Keyword> keywords = keywordService.findAllByUser();
+        List<KeywordResponseDto.Response> responses = keywordMapper.listKeywordToListKeywordResponseDtoResponse(keywords);
+
+        return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
     // Update
@@ -48,7 +74,13 @@ public class KeywordController {
         Keyword keyword = keywordService.updateKeyword(keywordMapper.keywordRequestDtoPatchToKeyword(patch));
         KeywordResponseDto.Response response = keywordMapper.keywordToKeywordResponseDtoResponse(keyword);
 
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping
+    public ResponseEntity patchKeyword(@Valid @RequestBody KeywordRequestDto.PatchUser patch) {
+        keywordService.updateKeyword(patch.getKeywords());
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     // Delete

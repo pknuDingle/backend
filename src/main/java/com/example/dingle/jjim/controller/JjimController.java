@@ -25,8 +25,8 @@ public class JjimController {
     // Create
     @PostMapping
     public ResponseEntity postJjim(@Valid @RequestBody JjimRequestDto.Post post) {
-        Jjim jjim = jjimService.createJjim(jjimMapper.jjimResponseDtoPostToJjim(post));
-        JjimResponseDto.Response response = jjimMapper.jjimToJjimResponseDtoResponse(jjim);
+        Jjim jjim = jjimService.createJjim(post.getNoticeId());
+        JjimResponseDto.Response response = jjimMapper.jjimToJjimResponseDtoResponseCustom(jjim);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -35,9 +35,9 @@ public class JjimController {
     @GetMapping("/{jjim-id}")
     public ResponseEntity getJjim(@Positive @PathVariable("jjim-id") long jjimId) {
         Jjim jjim = jjimService.findJjim(jjimId);
-        JjimResponseDto.Response response = jjimMapper.jjimToJjimResponseDtoResponse(jjim);
+        JjimResponseDto.Response response = jjimMapper.jjimToJjimResponseDtoResponseCustom(jjim);
 
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     // Update
@@ -46,10 +46,18 @@ public class JjimController {
                                       @Valid @RequestBody JjimRequestDto.Patch patch) {
         patch.setId(jjimId);
         Jjim jjim = jjimService.updateJjim(jjimMapper.jjimResponseDtoPatchToJjim(patch));
-        JjimResponseDto.Response response = jjimMapper.jjimToJjimResponseDtoResponse(jjim);
+        JjimResponseDto.Response response = jjimMapper.jjimToJjimResponseDtoResponseCustom(jjim);
 
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @PutMapping
+    public ResponseEntity patchJjim(@Valid @RequestBody JjimRequestDto.Patch patch) {
+        jjimService.updateJjim(patch.getNoticeId());
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 
     // Delete
     @DeleteMapping("/{jjim-id}")

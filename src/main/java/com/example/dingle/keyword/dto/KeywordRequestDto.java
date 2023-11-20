@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 public class KeywordRequestDto {
     @Getter
     @Setter
@@ -22,5 +24,14 @@ public class KeywordRequestDto {
     public static class Patch {
         private long id;
         private String name;
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class PatchUser {
+        private long id;
+        private List<String> keywords;
     }
 }

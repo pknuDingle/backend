@@ -27,6 +27,8 @@ public class JwtTokenProvider {
 
     @Value("${jwt.key}") // application.properties 등에 보관한다.
     private String secretKey;
+    @Value("${jwt.access-token-expiration-minutes}") // application.properties 등에 보관한다.
+    private int accessTokenExpiration;
     private final UserRepository userRepository;
 
     // 객체 초기화, secretKey를 Base64로 인코딩
@@ -42,7 +44,7 @@ public class JwtTokenProvider {
         return Jwts.builder()
                 .setClaims(claims) // 정보 저장
                 .setIssuedAt(now) // 토큰 발행 시간 정보
-                .setExpiration(new Date(now.getTime() + (30 * 60 * 1000L))) // 토큰 유효시각 설정 (30분)
+                .setExpiration(new Date(now.getTime() + (accessTokenExpiration * 60 * 1000L))) // 토큰 유효시각 설정 (30분) = 30 * 60 * 1000L
                 .signWith(SignatureAlgorithm.HS256, secretKey)  // 암호화 알고리즘과, secret 값
                 .compact();
     }

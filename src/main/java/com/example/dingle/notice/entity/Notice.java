@@ -2,6 +2,7 @@ package com.example.dingle.notice.entity;
 
 import com.example.dingle.auditable.Auditable;
 import com.example.dingle.homepage.entity.Homepage;
+import com.example.dingle.jjim.entity.Jjim;
 import com.example.dingle.noticeKeyword.entity.NoticeKeyword;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -46,6 +47,9 @@ public class Notice extends Auditable {
 
     @OneToMany(mappedBy = "notice", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<NoticeKeyword> noticeKeywords = new ArrayList<>();
+
+    @OneToMany(mappedBy = "notice", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Jjim> jjims = new ArrayList<>();
 
     public Notice(String title, String content, String link) {
         this.title = title;

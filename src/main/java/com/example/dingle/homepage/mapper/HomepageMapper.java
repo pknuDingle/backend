@@ -5,6 +5,8 @@ import com.example.dingle.homepage.dto.HomepageResponseDto;
 import com.example.dingle.homepage.entity.Homepage;
 import org.mapstruct.Mapper;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface HomepageMapper {
     Homepage homepageRequestDtoPostToHomepage(HomepageRequestDto.Post post);
@@ -12,4 +14,5 @@ public interface HomepageMapper {
     Homepage homepageRequestDtoPatchToHomepage(HomepageRequestDto.Patch patch);
 
     HomepageResponseDto.Response homepageToHomepageResponseDtoResponse(Homepage homepage);
+    List<HomepageResponseDto.Response> ListhomepageToListHomepageResponseDtoResponse(List<Homepage> homepage);
 }
