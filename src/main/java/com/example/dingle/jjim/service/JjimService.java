@@ -77,13 +77,4 @@ public class JjimService {
         Optional<Jjim> jjim = jjimRepository.findByUserAndNotice(user, notice);
         return jjim.orElse(null);
     }
-
-    public boolean isFavorite(Notice notice) {
-        User user = findUserByJWT.getLoginUser();
-        Jjim jjim = verifiedJjim(user, notice);
-
-        if(jjim == null) return false;
-        return true;
-    }
-
 }
