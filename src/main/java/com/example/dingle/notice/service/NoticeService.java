@@ -16,6 +16,7 @@ import com.example.dingle.util.FindUserByJWT;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -44,16 +45,41 @@ public class NoticeService {
         return verifiedNotice(noticeId);
     }
 
-    public List<Notice> findNoticeByKeyword() {
+    public List<Notice> findNoticeAll() {
+        return noticeRepository.findAll();
+    }
+
+    public List<Notice> findNoticeByKeywords() {
         User user = findUserByJWT.getLoginUser();
         List<NoticeKeyword> noticeKeywords = noticeKeywordService.findNoticeKeywords(user);
         return noticeKeywords.stream().map(NoticeKeyword::getNotice).collect(Collectors.toList());
     }
 
-    public List<Notice> findNoticeByHomepage() {
+    public List<Notice> findNoticeByHomepages() {
         User user = findUserByJWT.getLoginUser();
         List<Homepage> homepages = userHomepageService.findHomepageByUser(user);
         return noticeRepository.findByHomepageIn(homepages);
+    }
+
+    public List<Notice> findNoticeByKeywordsAndHomeages() {
+        List<Notice> notices = findNoticeByKeywords();
+
+        User user = findUserByJWT.getLoginUser();
+        List<Homepage> homepages = userHomepageService.findHomepageByUser(user);
+
+        // 설정한 homepage가 없는 경우
+        if(homepages.size() == 0) return new ArrayList<>();
+
+        // 모든 homepage가 설정되어 경우
+        if(homepages.size() == 2) return notices;
+
+        // 1개의 homepage만 설정되어 있는 경우
+        long homepageId = homepages.get(0).getId();
+        notices = notices.stream()
+                .filter(notice -> notice.getHomepage().getId() == homepageId)
+                .collect(Collectors.toList());
+
+        return notices;
     }
 
     // Update

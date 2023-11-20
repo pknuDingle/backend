@@ -46,6 +46,15 @@ public class NoticeController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity getNotices() {
+        List<Notice> notices = noticeService.findNoticeAll();
+        List<Boolean> isFavorites = noticeService.isFavorite(notices);
+        List<NoticeResponseDto.Response> responses = noticeMapper.noticeListToNoticeResponseDtoResponseList(notices, isFavorites);
+
+        return new ResponseEntity<>(responses, HttpStatus.OK);
+    }
+
     // Update
     @PutMapping("/{notice-id}")
     public ResponseEntity patchNotice(@Positive @PathVariable("notice-id") long noticeId,
@@ -88,8 +97,8 @@ public class NoticeController {
 
     // user의 keywords별 notice 조회
     @GetMapping("/keywords")
-    public ResponseEntity getNoticeAndKeywords() {
-        List<Notice> notices = noticeService.findNoticeByKeyword();
+    public ResponseEntity getNoticeByKeywords() {
+        List<Notice> notices = noticeService.findNoticeByKeywords();
         List<Boolean> isFavorites = noticeService.isFavorite(notices);
         List<NoticeResponseDto.Response> responses = noticeMapper.noticeListToNoticeResponseDtoResponseList(notices, isFavorites);
 
@@ -98,8 +107,18 @@ public class NoticeController {
 
     // user의 homepages별 notice 조회
     @GetMapping("/homepages")
-    public ResponseEntity getNoticeAndHomepages() {
-        List<Notice> notices = noticeService.findNoticeByHomepage();
+    public ResponseEntity getNoticeByHomepages() {
+        List<Notice> notices = noticeService.findNoticeByHomepages();
+        List<Boolean> isFavorites = noticeService.isFavorite(notices);
+        List<NoticeResponseDto.Response> responses = noticeMapper.noticeListToNoticeResponseDtoResponseList(notices, isFavorites);
+
+        return new ResponseEntity<>(responses, HttpStatus.OK);
+    }
+
+    // user가 설정한 keywords와 homepages에 맞는 notice 조회
+    @GetMapping
+    public ResponseEntity getNoticeByKeywordsAndHomepages() {
+        List<Notice> notices = noticeService.findNoticeByKeywordsAndHomeages();
         List<Boolean> isFavorites = noticeService.isFavorite(notices);
         List<NoticeResponseDto.Response> responses = noticeMapper.noticeListToNoticeResponseDtoResponseList(notices, isFavorites);
 
