@@ -12,8 +12,8 @@ public class JjimRequestDto {
     @AllArgsConstructor
     public static class Post {
         private long id;
-        private User user;
-        private Notice notice;
+        private long userId;
+        private long noticeId;
     }
 
     @Getter
@@ -21,7 +21,7 @@ public class JjimRequestDto {
     @AllArgsConstructor
     public static class Patch {
         private long id;
-        private User user;
-        private Notice notice;
+        private long userId;
+        private long noticeId;
     }
 }
