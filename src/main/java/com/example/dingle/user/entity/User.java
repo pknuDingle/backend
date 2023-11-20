@@ -54,5 +54,5 @@ public class User extends Auditable {
     private List<UserHomepage> userHomepages = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<UserKeyword> userCategories = new ArrayList<>();
+    private List<UserKeyword> userKeywords = new ArrayList<>();
 }

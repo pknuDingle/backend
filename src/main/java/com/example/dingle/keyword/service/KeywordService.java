@@ -39,6 +39,12 @@ public class KeywordService {
         return keywordRepository.findAll();
     }
 
+    public List<Keyword> findAllByUser() {
+        User user = findUserByJWT.getLoginUser();
+        List<Keyword> keywords = userKeywordService.findKeywordByUser(user);
+        return keywords;
+    }
+
     // Update
     public Keyword updateKeyword(Keyword keyword) {
         Keyword findKeyword = verifiedKeyword(keyword.getId());

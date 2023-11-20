@@ -27,8 +27,8 @@ public class UserKeywordService {
 
     public void createUserKeywords(User user, List<Keyword> keywords) {
         // 새로운 키워드 생성
-        for(Keyword keyword : keywords) {
-            if(verifiedUserKeyword(user, keyword) == null) createUserKeyword(user, keyword);
+        for (Keyword keyword : keywords) {
+            if (verifiedUserKeyword(user, keyword) == null) createUserKeyword(user, keyword);
         }
 
         // 이전 키워드 제거
@@ -37,7 +37,7 @@ public class UserKeywordService {
                 .map(UserKeyword::getKeyword)
                 .collect(Collectors.toList());
         beforeKeywords.removeAll(keywords);
-        for(Keyword keyword : beforeKeywords) {
+        for (Keyword keyword : beforeKeywords) {
             UserKeyword userKeyword = verifiedUserKeyword(user, keyword);
             userKeywordRepository.delete(userKeyword);
         }
@@ -48,6 +48,9 @@ public class UserKeywordService {
         return verifiedUserKeyword(userKeywordId);
     }
 
+    public List<Keyword> findKeywordByUser(User user) {
+        return userKeywordRepository.findAllByUser(user).stream().map(UserKeyword::getKeyword).collect(Collectors.toList());
+    }
 
     // Delete
     public void deleteUserKeyword(long userKeywordId) {
