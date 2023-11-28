@@ -94,7 +94,8 @@ public class PknuMain {
 
                 // 제목 & 내용 크롤링
                 String title = documentDetail.getElementsByClass("title_b").get(0).text(); // 제목
-                String content = documentDetail.select("div.bdvTxt").get(0).text(); // 내용
+                String text = documentDetail.select("div.bdvTxt").get(0).text(); // 내용
+                String content = text.length() > 30 ? text.substring(0, 30) + "..." : text;
 
                 // 이미지
                 Element imageElement = documentDetail.select("div.bdvTxt").first();
@@ -115,7 +116,7 @@ public class PknuMain {
                 notice = noticeRepository.save(notice);
 
                 // 키워드 기반 필터링(제목, 내용에서 키워드 추출 -> 키워드 설정한 user에게 알림 전송)
-                List<Keyword> keywords = filtering.filterKeywordsReturnKeyWord(title, content);
+                List<Keyword> keywords = filtering.filterKeywordsReturnKeyWord(title, text);
                 noticeKeywordService.createNoticeKeyword(notice, keywords);
                 List<UserKeyword> userKeywords = userKeywordService.findUserKeywordsWithKeywords(keywords);
                 personalNoticeService.createPersonalNotices(userKeywords, notice);
