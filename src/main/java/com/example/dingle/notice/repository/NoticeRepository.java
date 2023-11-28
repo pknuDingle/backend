@@ -18,4 +18,7 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
 
     @Query("SELECT COALESCE(MAX(n.noticeNum), 0) FROM Notice n")
     Long findLatestNoticeNum();
+
+    @Query("SELECT COALESCE(MAX(n.pageNum), 0) FROM Notice n")
+    Long findLatestPageNum();
 }
