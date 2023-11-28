@@ -2,6 +2,8 @@ package com.example.dingle.userHomepage.entity;
 
 import com.example.dingle.auditable.Auditable;
 import com.example.dingle.homepage.entity.Homepage;
+import com.example.dingle.notice.entity.Notice;
+import com.example.dingle.personalNotice.entity.PersonalNotice;
 import com.example.dingle.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,5 +33,9 @@ public class UserHomepage extends Auditable {
     public UserHomepage(User user, Homepage homepage) {
         this.user = user;
         this.homepage = homepage;
+    }
+
+    public PersonalNotice toPersonalNotice(Notice notice) {
+        return new PersonalNotice(user, notice, homepage);
     }
 }

@@ -57,10 +57,11 @@ public class Notice extends Auditable {
         this.link = link;
     }
 
-    public Notice(String title, String content, String link, Long noticeNum) {
+    public Notice(String title, String content, String link, Long noticeNum, Homepage homepage) {
         this.title = title;
         this.content = content;
         this.link = link;
         this.noticeNum = noticeNum;
+        this.homepage = homepage;
     }
 }
