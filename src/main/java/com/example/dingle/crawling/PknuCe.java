@@ -68,9 +68,7 @@ public class PknuCe {
         for (Element notice : notices) {
             // 번호, 제목, 링크 가져오기
             Long noticeNum = Long.valueOf(notice.select("td.bdlNum.noti").text());
-//            if (noticeNum <= latestNoticeNum) continue; // db에 저장된 가장 최신 공지사항 번호보다 크롤링한 공지사항 번호가 작은 경우 패스
-            System.out.println("!! " + noticeNum);
-            if(noticeNum != 1190) continue;
+            if (noticeNum <= latestNoticeNum) continue; // db에 저장된 가장 최신 공지사항 번호보다 크롤링한 공지사항 번호가 작은 경우 패스
             String title = notice.select("td.bdlTitle a").text();
             String link = pknuCeAllNoticeUrl + notice.select("td.bdlTitle a").attr("href");
 
