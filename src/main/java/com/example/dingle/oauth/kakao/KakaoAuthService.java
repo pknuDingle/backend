@@ -1,14 +1,10 @@
 package com.example.dingle.oauth.kakao;
 
-import com.example.dingle.exception.BusinessLogicException;
-import com.example.dingle.exception.ExceptionCode;
-import com.example.dingle.oauth.kakao.KakaoUserInfo;
 import com.example.dingle.oauth.kakaoResponse.KakaoUserInfoResponse;
 import com.example.dingle.user.entity.User;
 import com.example.dingle.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -42,6 +38,21 @@ public class KakaoAuthService {
             user1.setImageUrl(userInfo.getKakao_account().getProfile().getThumbnail_image_url());
             return userRepository.save(user1);
         });
+        return user;
+    }
+
+    public User signinWithFcmToken(String token, String fcmToken) {
+        KakaoUserInfoResponse userInfo = kakaoUserInfo.getUserInfo(token);
+        User user = userRepository.findByKakakoId(userInfo.getId()).orElseGet(() -> {
+            User user1 = new User();
+            user1.setKakakoId(userInfo.getId());
+            user1.setName(userInfo.getKakao_account().getProfile().getNickname());
+            user1.setImageUrl(userInfo.getKakao_account().getProfile().getThumbnail_image_url());
+            user1.setFcmToken(fcmToken);
+
+            return userRepository.save(user1);
+        });
+
         return user;
     }
 }

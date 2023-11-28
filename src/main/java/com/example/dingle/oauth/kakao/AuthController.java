@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Positive;
-import java.util.HashMap;
 
 @RequiredArgsConstructor
 @RestController
@@ -37,6 +36,15 @@ public class AuthController {
     public ResponseEntity generate(@Positive @PathVariable long userId) {
         User user = userService.verifiedUser(userId);
         String jwt = jwtTokenProvider.createToken(String.valueOf(userId));
+        KakaoResponseDto.Response response = userMapper.userToKakaoResponseDtoResponse(user, jwt);
+        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+    }
+
+    // fcm 토큰 값 추가된 로그인, 추후 프론트에서 fcm 토큰 생성 후 전송 구현 시 사용할 예정
+    @PostMapping("/login")
+    public ResponseEntity authSigninWithFcmToken(@RequestHeader String accessToken, @RequestHeader String fcmToken) {
+        User user = kakaoAuthService.signinWithFcmToken(accessToken, fcmToken);
+        String jwt = jwtTokenProvider.createToken(String.valueOf(user.getId()));
         KakaoResponseDto.Response response = userMapper.userToKakaoResponseDtoResponse(user, jwt);
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
