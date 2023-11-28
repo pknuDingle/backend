@@ -1,8 +1,8 @@
 package com.example.dingle.userKeyword.service;
 
-import com.example.dingle.keyword.entity.Keyword;
 import com.example.dingle.exception.BusinessLogicException;
 import com.example.dingle.exception.ExceptionCode;
+import com.example.dingle.keyword.entity.Keyword;
 import com.example.dingle.user.entity.User;
 import com.example.dingle.userKeyword.entity.UserKeyword;
 import com.example.dingle.userKeyword.repository.UserKeywordRepository;
@@ -72,13 +72,5 @@ public class UserKeywordService {
     public UserKeyword verifiedUserKeyword(User user, Keyword keyword) {
         Optional<UserKeyword> userKeyword = userKeywordRepository.findAllByUserAndKeyword(user, keyword);
         return userKeyword.orElse(null);
-    }
-
-    public List<UserKeyword> findUserKeywordsWithKeywords(List<Keyword> keywords) {
-        List<UserKeyword> userKeywords = keywords.stream()
-                .flatMap(keyword -> userKeywordRepository.findAllByKeyword(keyword).stream())
-                .collect(Collectors.toList());
-
-        return userKeywords;
     }
 }
