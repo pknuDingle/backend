@@ -24,7 +24,7 @@ public class NoticeKeywordService {
     }
 
     public void createNoticeKeyword(Notice notice, List<Keyword> keywords) {
-        for(Keyword keyword : keywords) {
+        for (Keyword keyword : keywords) {
             NoticeKeyword noticeKeyword = new NoticeKeyword();
             noticeKeyword.setKeyword(keyword);
             noticeKeyword.setNotice(notice);

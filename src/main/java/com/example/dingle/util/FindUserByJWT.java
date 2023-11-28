@@ -1,13 +1,9 @@
 package com.example.dingle.util;
 
-import com.example.dingle.exception.*;
 import com.example.dingle.user.entity.User;
-import com.example.dingle.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.util.Optional;
 
 @Configuration
 @AllArgsConstructor

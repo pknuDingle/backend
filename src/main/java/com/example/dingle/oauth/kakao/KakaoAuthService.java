@@ -1,14 +1,10 @@
 package com.example.dingle.oauth.kakao;
 
-import com.example.dingle.exception.BusinessLogicException;
-import com.example.dingle.exception.ExceptionCode;
-import com.example.dingle.oauth.kakao.KakaoUserInfo;
 import com.example.dingle.oauth.kakaoResponse.KakaoUserInfoResponse;
 import com.example.dingle.user.entity.User;
 import com.example.dingle.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service

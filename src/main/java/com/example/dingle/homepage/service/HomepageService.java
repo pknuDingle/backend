@@ -6,7 +6,6 @@ import com.example.dingle.homepage.entity.Homepage;
 import com.example.dingle.homepage.repository.HomepageRepository;
 import com.example.dingle.notice.entity.Notice;
 import com.example.dingle.user.entity.User;
-import com.example.dingle.userHomepage.entity.UserHomepage;
 import com.example.dingle.userHomepage.service.UserHomepageService;
 import com.example.dingle.util.FindUserByJWT;
 import lombok.AllArgsConstructor;

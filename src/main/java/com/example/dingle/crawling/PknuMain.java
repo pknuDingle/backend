@@ -5,17 +5,15 @@ import com.example.dingle.homepage.service.HomepageService;
 import com.example.dingle.keyword.entity.Keyword;
 import com.example.dingle.notice.entity.Notice;
 import com.example.dingle.notice.repository.NoticeRepository;
-import com.example.dingle.noticeKeyword.entity.NoticeKeyword;
 import com.example.dingle.noticeKeyword.service.NoticeKeywordService;
 import com.example.dingle.personalNotice.service.PersonalNoticeService;
 import com.example.dingle.userKeyword.entity.UserKeyword;
 import com.example.dingle.userKeyword.service.UserKeywordService;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.*;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.jsoup.select.NodeTraversor;
-import org.jsoup.select.NodeVisitor;
 import org.springframework.stereotype.Component;
 
 import javax.net.ssl.*;
@@ -24,7 +22,6 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
-import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -53,6 +50,32 @@ public class PknuMain {
         this.userKeywordService = userKeywordService;
         this.noticeKeywordService = noticeKeywordService;
         this.personalNoticeService = personalNoticeService;
+    }
+
+    // SSL 우회 등록
+    public static void setSSL() throws NoSuchAlgorithmException, KeyManagementException {
+        TrustManager[] trustAllCerts = new TrustManager[]{
+                new X509TrustManager() {
+                    public X509Certificate[] getAcceptedIssuers() {
+                        return null;
+                    }
+
+                    public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                    }
+
+                    public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                    }
+                }
+        };
+        SSLContext sc = SSLContext.getInstance("SSL");
+        sc.init(null, trustAllCerts, new SecureRandom());
+        HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+            @Override
+            public boolean verify(String hostname, SSLSession session) {
+                return true;
+            }
+        });
+        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
     }
 
     public void crawling() {
@@ -171,32 +194,5 @@ public class PknuMain {
         content = content.replace("$(function(){", "123123lkjlkj").split("123123lkjlkj")[0];
 
         return content.trim();
-    }
-
-
-    // SSL 우회 등록
-    public static void setSSL() throws NoSuchAlgorithmException, KeyManagementException {
-        TrustManager[] trustAllCerts = new TrustManager[]{
-                new X509TrustManager() {
-                    public X509Certificate[] getAcceptedIssuers() {
-                        return null;
-                    }
-
-                    public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                    }
-
-                    public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                    }
-                }
-        };
-        SSLContext sc = SSLContext.getInstance("SSL");
-        sc.init(null, trustAllCerts, new SecureRandom());
-        HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-            @Override
-            public boolean verify(String hostname, SSLSession session) {
-                return true;
-            }
-        });
-        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
     }
 }

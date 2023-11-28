@@ -5,18 +5,11 @@ import com.example.dingle.keyword.entity.Keyword;
 import com.example.dingle.keyword.service.KeywordService;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class AutoKeyword {
     private final KeywordService keywordService;
-
-    public AutoKeyword(KeywordService keywordService) {
-        this.keywordService = keywordService;
-        saveKeyword();
-    }
-
     private final List<String> SCHOOLS = List.of(
             "근로",
             "졸업",
@@ -28,7 +21,6 @@ public class AutoKeyword {
             "동아리",
             "휴학"
     );
-
     private final List<String> CAREER_SUPPORTS = List.of(
             "취업",
             "창업",
@@ -40,18 +32,23 @@ public class AutoKeyword {
             "어학"
     );
 
+    public AutoKeyword(KeywordService keywordService) {
+        this.keywordService = keywordService;
+        saveKeyword();
+    }
+
     // 키워드 저장
     public void saveKeyword() {
         List<Keyword> keywords = keywordService.findAllKeywords();
-        if(keywords.isEmpty()) { // 키워드가 없을 때에만 키워드 생성
-            for(String categoryType : SCHOOLS) {
+        if (keywords.isEmpty()) { // 키워드가 없을 때에만 키워드 생성
+            for (String categoryType : SCHOOLS) {
                 Keyword keyword = new Keyword();
                 keyword.setName(categoryType);
                 keyword.setCategoryType(CategoryType.SCHOOL);
                 keywordService.createKeyword(keyword);
             }
 
-            for(String categoryType : CAREER_SUPPORTS) {
+            for (String categoryType : CAREER_SUPPORTS) {
                 Keyword keyword = new Keyword();
                 keyword.setName(categoryType);
                 keyword.setCategoryType(CategoryType.CAREER_SUPPORT);

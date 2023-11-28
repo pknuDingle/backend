@@ -1,14 +1,8 @@
 package com.example.dingle.crawling;
 
 
-import com.example.dingle.keyword.entity.Keyword;
-import com.example.dingle.notice.entity.Notice;
-import com.example.dingle.notice.repository.NoticeRepository;
-import com.example.dingle.noticeKeyword.service.NoticeKeywordService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 //@AllArgsConstructor

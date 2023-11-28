@@ -1,14 +1,10 @@
 package com.example.dingle.keyword.service;
 
-import com.example.dingle.keyword.entity.Keyword;
-import com.example.dingle.keyword.repository.KeywordRepository;
 import com.example.dingle.exception.BusinessLogicException;
 import com.example.dingle.exception.ExceptionCode;
-
-
-import com.example.dingle.noticeKeyword.service.NoticeKeywordService;
+import com.example.dingle.keyword.entity.Keyword;
+import com.example.dingle.keyword.repository.KeywordRepository;
 import com.example.dingle.user.entity.User;
-import com.example.dingle.userKeyword.entity.UserKeyword;
 import com.example.dingle.userKeyword.service.UserKeywordService;
 import com.example.dingle.util.FindUserByJWT;
 import lombok.AllArgsConstructor;

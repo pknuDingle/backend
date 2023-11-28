@@ -14,5 +14,6 @@ public interface HomepageMapper {
     Homepage homepageRequestDtoPatchToHomepage(HomepageRequestDto.Patch patch);
 
     HomepageResponseDto.Response homepageToHomepageResponseDtoResponse(Homepage homepage);
+
     List<HomepageResponseDto.Response> ListhomepageToListHomepageResponseDtoResponse(List<Homepage> homepage);
 }

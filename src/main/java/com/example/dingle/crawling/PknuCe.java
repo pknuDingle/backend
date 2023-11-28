@@ -10,7 +10,6 @@ import com.example.dingle.noticeKeyword.repository.NoticeKeywordRepository;
 import com.example.dingle.noticeKeyword.service.NoticeKeywordService;
 import com.example.dingle.personalNotice.service.PersonalNoticeService;
 import com.example.dingle.userKeyword.entity.UserKeyword;
-import com.example.dingle.userKeyword.repository.UserKeywordRepository;
 import com.example.dingle.userKeyword.service.UserKeywordService;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -19,7 +18,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
 
-import javax.net.ssl.*;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.List;
@@ -30,7 +32,6 @@ public class PknuCe {
     private final static String HOMEPAGE_NAME = "부경대학교 컴퓨터·인공지능공학부";
     private final static String HOMEPAGE_URL = "https://ce.pknu.ac.kr/ce/1814";
     private final static String IMAGE_URL = "https://ce.pknu.ac.kr/";
-    private String pknuCeAllNoticeUrl = "https://ce.pknu.ac.kr/ce/1814";
     private final NoticeRepository noticeRepository;
     private final NoticeKeywordRepository noticeKeywordRepository;
     private final KeywordRepository keywordRepository;
@@ -39,6 +40,7 @@ public class PknuCe {
     private final PersonalNoticeService personalNoticeService;
     private final NoticeKeywordService noticeKeywordService;
     private final HomepageService homepageService;
+    private final String pknuCeAllNoticeUrl = "https://ce.pknu.ac.kr/ce/1814";
 
     public PknuCe(NoticeRepository noticeRepository, NoticeKeywordRepository noticeKeywordRepository, KeywordRepository keywordRepository, Filtering filtering, UserKeywordService userKeywordService, PersonalNoticeService personalNoticeService, NoticeKeywordService noticeKeywordService, HomepageService homepageService) {
         this.noticeRepository = noticeRepository;
@@ -49,6 +51,29 @@ public class PknuCe {
         this.personalNoticeService = personalNoticeService;
         this.noticeKeywordService = noticeKeywordService;
         this.homepageService = homepageService;
+    }
+
+    // SSL 우회 등록
+    public static void setSSL() throws Exception {
+        TrustManager[] trustAllCerts = {
+                new X509TrustManager() {
+                    public X509Certificate[] getAcceptedIssuers() {
+                        return null;
+                    }
+
+                    public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                    }
+
+                    public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                    }
+                }
+        };
+
+        SSLContext sc = SSLContext.getInstance("SSL");
+        sc.init(null, trustAllCerts, new SecureRandom());
+
+        HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
+        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
     }
 
     public void pknuCeAllNoticeCrawling() throws Exception {
@@ -116,28 +141,5 @@ public class PknuCe {
         }
 
         return mainHomepage;
-    }
-
-    // SSL 우회 등록
-    public static void setSSL() throws Exception {
-        TrustManager[] trustAllCerts = {
-                new X509TrustManager() {
-                    public X509Certificate[] getAcceptedIssuers() {
-                        return null;
-                    }
-
-                    public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                    }
-
-                    public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                    }
-                }
-        };
-
-        SSLContext sc = SSLContext.getInstance("SSL");
-        sc.init(null, trustAllCerts, new SecureRandom());
-
-        HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
-        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
     }
 }

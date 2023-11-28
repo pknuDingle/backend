@@ -5,7 +5,6 @@ import com.example.dingle.keyword.repository.KeywordRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Component

@@ -38,7 +38,7 @@ public class UserService {
         Optional.ofNullable(user.getEmail()).ifPresent(findUser::setEmail);
         Optional.ofNullable(user.getImageUrl()).ifPresent(findUser::setImageUrl);
         Optional.ofNullable(user.getStatus()).ifPresent(findUser::setStatus);
-        if(user.getKakakoId() != 0) findUser.setKakakoId(user.getKakakoId());
+        if (user.getKakakoId() != 0) findUser.setKakakoId(user.getKakakoId());
 
         return userRepository.save(findUser);
     }
