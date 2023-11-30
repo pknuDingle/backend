@@ -1,19 +1,25 @@
 package com.example.dingle.crawling;
 
+import com.example.dingle.fcm.service.FcmService;
 import com.example.dingle.homepage.entity.Homepage;
 import com.example.dingle.homepage.service.HomepageService;
 import com.example.dingle.keyword.entity.Keyword;
 import com.example.dingle.notice.entity.Notice;
 import com.example.dingle.notice.repository.NoticeRepository;
 import com.example.dingle.noticeKeyword.service.NoticeKeywordService;
+import com.example.dingle.personalNotice.entity.PersonalNotice;
 import com.example.dingle.personalNotice.service.PersonalNoticeService;
+import com.example.dingle.userHomepage.entity.UserHomepage;
+import com.example.dingle.userHomepage.repository.UserHomepageRepository;
 import com.example.dingle.userKeyword.entity.UserKeyword;
-import com.example.dingle.userKeyword.service.UserKeywordService;
+import com.example.dingle.userKeyword.repository.UserKeywordRepository;
+import lombok.RequiredArgsConstructor;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.net.ssl.*;
@@ -25,32 +31,22 @@ import java.security.cert.X509Certificate;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class PknuMain {
-    private final String PKNU_MAIN_URL = "https://www.pknu.ac.kr/main/163?action=view&no=";
+
     private final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36";
-
     private final String HOMEPAGE_NAME = "부경대학교 메인홈페이지";
-
     private final String HOMEPAGE_URL = "https://www.pknu.ac.kr/main/163";
-
     private final HomepageService homepageService;
-
     private final NoticeRepository noticeRepository;
-
     private final Filtering filtering;
-    private final UserKeywordService userKeywordService;
     private final NoticeKeywordService noticeKeywordService;
-
     private final PersonalNoticeService personalNoticeService;
-
-    public PknuMain(HomepageService homepageService, NoticeRepository noticeRepository, Filtering filtering, UserKeywordService userKeywordService, NoticeKeywordService noticeKeywordService, PersonalNoticeService personalNoticeService) {
-        this.homepageService = homepageService;
-        this.noticeRepository = noticeRepository;
-        this.filtering = filtering;
-        this.userKeywordService = userKeywordService;
-        this.noticeKeywordService = noticeKeywordService;
-        this.personalNoticeService = personalNoticeService;
-    }
+    private final FcmService fcmService;
+    private final UserHomepageRepository userHomepageRepository;
+    private final UserKeywordRepository userKeywordRepository;
+    @Value("${file-server.domain} + ':' + ${server.port} + ${file-server.image.notice-default}")
+    private String noticeDefaultImage;
 
     // SSL 우회 등록
     public static void setSSL() throws NoSuchAlgorithmException, KeyManagementException {
@@ -78,9 +74,9 @@ public class PknuMain {
         HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
     }
 
-    public void crawling() {
+    public void crawling() throws Exception {
         String url = "https://www.pknu.ac.kr/main/163?cd=10001"; // 메인 홈페이지 링크
-        Homepage homepage = findPknuMainHomepage();
+        Homepage mainHomepage = findPknuMainHomepage();
 
         try {
             if (url.indexOf("https://") >= 0) {
@@ -123,27 +119,26 @@ public class PknuMain {
                 // 이미지
                 Element imageElement = documentDetail.select("div.bdvTxt").first();
                 String image = imageElement.select("img").attr("src"); // 이미지
+                if (image.isEmpty()) {
+                    image = noticeDefaultImage;
+                }
 
-                // 공지사항 기본 설정
-                notice.setTitle(title); // 제목
-                notice.setContent(content); // 내용
-                notice.setLink(link); // 상세페에지 링크
-                notice.setPageNum(pageNum); // 페이지 번호
-                notice.setImage(image);
+                // 공지사항 저장
+                Notice newNotice = noticeRepository.save(Notice.createWithPageNum(title, content, link, image, pageNum, mainHomepage));
 
-                // 홈페이지와의 연관관계 생성
-                // 부경대 메인 홈페이지 객체 찾기
-                notice.setHomepage(homepage);
+                // 키워드 기반 필터링
+                List<Keyword> keywords = filtering.filterKeywordsReturnKeyWord(title, content);
+                noticeKeywordService.createNoticeKeyword(newNotice, keywords);
 
-                // notice 저장
-                notice = noticeRepository.save(notice);
+                // 설정된 키워드 공지사항 알림
+                List<UserKeyword> userKeywords = userKeywordRepository.findAllByKeywordIn(keywords);
+                List<PersonalNotice> personalKeywordNotices = personalNoticeService.createPersonalNoticesWithUserKeywords(userKeywords, newNotice);
+                fcmService.sendPersonalKeywordNoticeToUser(personalKeywordNotices);
 
-                // 키워드 기반 필터링(제목, 내용에서 키워드 추출 -> 키워드 설정한 user에게 알림 전송)
-                List<Keyword> keywords = filtering.filterKeywordsReturnKeyWord(title, text);
-                noticeKeywordService.createNoticeKeyword(notice, keywords);
-                List<UserKeyword> userKeywords = userKeywordService.findUserKeywordsWithKeywords(keywords);
-                personalNoticeService.createPersonalNotices(userKeywords, notice);
-                // TODO: 알림 전송
+                // 설정된 홈페이지 공지사항 알림
+                List<UserHomepage> userHomepages = userHomepageRepository.findAllByHomepage(mainHomepage);
+                List<PersonalNotice> personalHomepageNotices = personalNoticeService.createPersonalNoticesWithUserHomepages(userHomepages, newNotice);
+                fcmService.sendPersonalHomepageNoticeToUser(personalHomepageNotices);
             }
         } catch (IOException e) {
             e.printStackTrace();
