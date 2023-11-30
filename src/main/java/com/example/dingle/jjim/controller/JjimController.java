@@ -43,7 +43,7 @@ public class JjimController {
     // Update
     @PutMapping("/{jjim-id}")
     public ResponseEntity patchJjim(@Positive @PathVariable("jjim-id") long jjimId,
-                                      @Valid @RequestBody JjimRequestDto.Patch patch) {
+                                    @Valid @RequestBody JjimRequestDto.Patch patch) {
         patch.setId(jjimId);
         Jjim jjim = jjimService.updateJjim(jjimMapper.jjimResponseDtoPatchToJjim(patch));
         JjimResponseDto.Response response = jjimMapper.jjimToJjimResponseDtoResponseCustom(jjim);

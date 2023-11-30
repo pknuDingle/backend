@@ -1,6 +1,5 @@
 package com.example.dingle.oauth.jwt;
 
-import com.example.dingle.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

@@ -3,6 +3,7 @@ package com.example.dingle.crawling;
 import com.example.dingle.fcm.service.FcmService;
 import com.example.dingle.homepage.entity.Homepage;
 import com.example.dingle.homepage.repository.HomepageRepository;
+import com.example.dingle.homepage.service.HomepageService;
 import com.example.dingle.keyword.entity.Keyword;
 import com.example.dingle.notice.entity.Notice;
 import com.example.dingle.notice.repository.NoticeRepository;
@@ -19,6 +20,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -33,16 +35,20 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PknuCe {
     private final static String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36";
+    private final static String HOMEPAGE_NAME = "부경대학교 컴퓨터·인공지능공학부";
+    private final static String HOMEPAGE_URL = "https://ce.pknu.ac.kr/ce/1814";
+    private final static String IMAGE_URL = "https://ce.pknu.ac.kr/";
     private final NoticeRepository noticeRepository;
     private final Filtering filtering;
     private final UserKeywordRepository userKeywordRepository;
     private final PersonalNoticeService personalNoticeService;
     private final NoticeKeywordService noticeKeywordService;
     private final FcmService fcmService;
-    private final HomepageRepository homepageRepository;
     private final UserHomepageRepository userHomepageRepository;
-    private final long pknuCeHomepageId = 2;
-    private final String pknuCeAllNoticeUrl = "https://ce.pknu.ac.kr/ce/1814";
+    private final HomepageService homepageService;
+
+    @Value("${file-server.domain} + ':' + ${server.port} + ${file-server.image.notice-default}")
+    private String noticeDefaultImage;
 
     // SSL 우회 등록
     public static void setSSL() throws Exception {
@@ -68,14 +74,14 @@ public class PknuCe {
     }
 
     public void pknuCeAllNoticeCrawling() throws Exception {
-        if (pknuCeAllNoticeUrl.indexOf("https://") >= 0) {
+        Homepage pknuCeHomepage = findPknuCeHomepage();
+        if (HOMEPAGE_URL.indexOf("https://") >= 0) {
             PknuCe.setSSL();
         }
 
         Connection listConnection, elementConnection;
-        listConnection = Jsoup.connect(pknuCeAllNoticeUrl).header("Content-Type", "application/json;charset=UTF-8").userAgent(USER_AGENT).method(Connection.Method.GET).ignoreContentType(true);
+        listConnection = Jsoup.connect(HOMEPAGE_URL).header("Content-Type", "application/json;charset=UTF-8").userAgent(USER_AGENT).method(Connection.Method.GET).ignoreContentType(true);
 
-        Homepage pknuCeHomepage = homepageRepository.findById(pknuCeHomepageId).get();
         // db에 저장된 가장 최신 공지사항 번호
         Long latestNoticeNum = noticeRepository.findLatestNoticeNum();
 
@@ -86,7 +92,7 @@ public class PknuCe {
             Long noticeNum = Long.valueOf(notice.select("td.bdlNum.noti").text());
             if (noticeNum <= latestNoticeNum) continue; // db에 저장된 가장 최신 공지사항 번호보다 크롤링한 공지사항 번호가 작은 경우 패스
             String title = notice.select("td.bdlTitle a").text();
-            String link = pknuCeAllNoticeUrl + notice.select("td.bdlTitle a").attr("href");
+            String link = HOMEPAGE_URL + notice.select("td.bdlTitle a").attr("href");
 
             // 링크를 통해 내용 일부 가져오기
             elementConnection = Jsoup.connect(link).header("Content-Type", "application/json;charset=UTF-8").userAgent(USER_AGENT).method(Connection.Method.GET).ignoreContentType(true);
@@ -94,8 +100,16 @@ public class PknuCe {
             String text = doc.select("td.bdvEdit").text();
             String content = text.length() > 30 ? text.substring(0, 30) + "..." : text;
 
+            // 이미지
+            Element element = doc.select("td.bdvEdit").first();
+            String imageSrc = element.select("img").attr("src");
+            String image = noticeDefaultImage;
+            if(!imageSrc.isEmpty()){
+                image = IMAGE_URL + imageSrc;
+            }
+
             // 저장
-            Notice newNotice = noticeRepository.save(new Notice(title, content, link, noticeNum, pknuCeHomepage));
+            Notice newNotice = noticeRepository.save(new Notice(title, content, link, image, noticeNum, pknuCeHomepage));
 
             // 키워드 기반 필터링
             List<Keyword> keywords = filtering.filterKeywordsReturnKeyWord(title, content);
@@ -111,5 +125,22 @@ public class PknuCe {
             List<PersonalNotice> personalHomepageNotices = personalNoticeService.createPersonalNoticesWithUserHomepages(userHomepages, newNotice);
             fcmService.sendPersonalHomepageNoticeToUser(personalHomepageNotices);
         }
+    }
+
+    // 연관관계 있는 홈페이지 반환
+    public Homepage findPknuCeHomepage() {
+        List<Homepage> homepages = homepageService.findAllHomepages();
+        Homepage pknuCeHomepage = null;
+        for (Homepage homepage : homepages) {
+            if (homepage.getName().equals(HOMEPAGE_NAME)) pknuCeHomepage = homepage;
+        }
+        if (pknuCeHomepage == null) { // 부경대 메인 홈페이지가 없는 경우 -> 새로 생성하기
+            pknuCeHomepage = new Homepage();
+            pknuCeHomepage.setName(HOMEPAGE_NAME);
+            pknuCeHomepage.setUrl(HOMEPAGE_URL);
+            pknuCeHomepage = homepageService.createHomepage(pknuCeHomepage);
+        }
+
+        return pknuCeHomepage;
     }
 }

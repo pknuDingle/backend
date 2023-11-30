@@ -2,8 +2,8 @@ package com.example.dingle.user.entity;
 
 import com.example.dingle.auditable.Auditable;
 import com.example.dingle.jjim.entity.Jjim;
-import com.example.dingle.userKeyword.entity.UserKeyword;
 import com.example.dingle.userHomepage.entity.UserHomepage;
+import com.example.dingle.userKeyword.entity.UserKeyword;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,9 +40,15 @@ public class User extends Auditable {
 
     @Enumerated(EnumType.STRING)
     private Attendance status = Attendance.DORMANT;
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<UserHomepage> userHomepages = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<UserKeyword> userKeywords = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Jjim> jjims = new ArrayList<>();
 
     @Getter
-    public static enum Attendance {
+    public enum Attendance {
         DORMANT("기숙사생"),
         NOT_DORMANT("기숙사생X");
 
@@ -53,13 +59,4 @@ public class User extends Auditable {
             this.state = state;
         }
     }
-
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<UserHomepage> userHomepages = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<UserKeyword> userKeywords = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<Jjim> jjims = new ArrayList<>();
 }

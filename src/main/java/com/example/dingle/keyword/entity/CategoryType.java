@@ -5,8 +5,8 @@ public enum CategoryType {
     SCHOOL(1, "학사"),
     CAREER_SUPPORT(2, "진로취업지원");
 
-    private long num;
-    private String name;
+    private final long num;
+    private final String name;
 
     CategoryType(long num, String name) {
         this.num = num;

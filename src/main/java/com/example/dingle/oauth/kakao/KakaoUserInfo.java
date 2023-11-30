@@ -10,8 +10,8 @@ import reactor.core.publisher.Flux;
 @Component
 public class KakaoUserInfo { // 카카오 API를 이용해 토큰을 전송하여 유저 정보를 요청
 
-    private final WebClient webClient;
     private static final String USER_INFO_URI = "https://kapi.kakao.com/v2/user/me";
+    private final WebClient webClient;
 
     public KakaoUserInfoResponse getUserInfo(String token) {
         Flux<KakaoUserInfoResponse> response = webClient.get()

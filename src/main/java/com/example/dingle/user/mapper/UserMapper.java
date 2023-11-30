@@ -9,7 +9,10 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
     User userResponseDtoPostToUser(UserRequestDto.Post post);
+
     User userResponseDtoPatchToUser(UserRequestDto.Patch patch);
+
     UserResponseDto.Response userToUserResponseDtoResponse(User user);
+
     KakaoResponseDto.Response userToKakaoResponseDtoResponse(User user, String jwt);
 }

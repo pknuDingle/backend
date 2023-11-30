@@ -7,7 +7,6 @@ import com.example.dingle.jjim.repository.JjimRepository;
 import com.example.dingle.notice.entity.Notice;
 import com.example.dingle.notice.service.NoticeService;
 import com.example.dingle.user.entity.User;
-import com.example.dingle.user.service.UserService;
 import com.example.dingle.util.FindUserByJWT;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

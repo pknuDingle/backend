@@ -35,7 +35,7 @@ public class UserKeyword extends Auditable {
         this.keyword = keyword;
     }
 
-    public PersonalNotice toPersonalNotice(Notice notice){
+    public PersonalNotice toPersonalNotice(Notice notice) {
         return new PersonalNotice(user, notice, keyword);
     }
 }

@@ -12,8 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -25,11 +23,11 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
+    private final UserRepository userRepository;
     @Value("${jwt.key}") // application.properties 등에 보관한다.
     private String secretKey;
     @Value("${jwt.access-token-expiration-minutes}") // application.properties 등에 보관한다.
     private int accessTokenExpiration;
-    private final UserRepository userRepository;
 
     // 객체 초기화, secretKey를 Base64로 인코딩
     @PostConstruct

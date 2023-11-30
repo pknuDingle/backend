@@ -1,6 +1,5 @@
 package com.example.dingle.oauth.kakaoResponse;
 
-import com.example.dingle.oauth.kakaoResponse.KakaoAccount;
 import lombok.Getter;
 
 import java.time.LocalDate;

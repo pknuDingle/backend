@@ -14,5 +14,6 @@ public interface KeywordMapper {
     Keyword keywordRequestDtoPatchToKeyword(KeywordRequestDto.Patch patch);
 
     KeywordResponseDto.Response keywordToKeywordResponseDtoResponse(Keyword keyword);
+
     List<KeywordResponseDto.Response> listKeywordToListKeywordResponseDtoResponse(List<Keyword> keyword);
 }

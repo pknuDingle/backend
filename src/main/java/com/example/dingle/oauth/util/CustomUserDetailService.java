@@ -1,6 +1,7 @@
 package com.example.dingle.oauth.util;
 
-import com.example.dingle.exception.*;
+import com.example.dingle.exception.BusinessLogicException;
+import com.example.dingle.exception.ExceptionCode;
 import com.example.dingle.user.entity.User;
 import com.example.dingle.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
