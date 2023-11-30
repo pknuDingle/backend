@@ -2,7 +2,6 @@ package com.example.dingle.crawling;
 
 import com.example.dingle.fcm.service.FcmService;
 import com.example.dingle.homepage.entity.Homepage;
-import com.example.dingle.homepage.repository.HomepageRepository;
 import com.example.dingle.homepage.service.HomepageService;
 import com.example.dingle.keyword.entity.Keyword;
 import com.example.dingle.notice.entity.Notice;
@@ -34,6 +33,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class PknuCe {
+
     private final static String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36";
     private final static String HOMEPAGE_NAME = "부경대학교 컴퓨터·인공지능공학부";
     private final static String HOMEPAGE_URL = "https://ce.pknu.ac.kr/ce/1814";
@@ -104,12 +104,12 @@ public class PknuCe {
             Element element = doc.select("td.bdvEdit").first();
             String imageSrc = element.select("img").attr("src");
             String image = noticeDefaultImage;
-            if(!imageSrc.isEmpty()){
+            if (!imageSrc.isEmpty()) {
                 image = IMAGE_URL + imageSrc;
             }
 
             // 저장
-            Notice newNotice = noticeRepository.save(new Notice(title, content, link, image, noticeNum, pknuCeHomepage));
+            Notice newNotice = noticeRepository.save(Notice.createWithNoticeNum(title, content, link, image, noticeNum, pknuCeHomepage));
 
             // 키워드 기반 필터링
             List<Keyword> keywords = filtering.filterKeywordsReturnKeyWord(title, content);
