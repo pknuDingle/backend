@@ -1,21 +1,25 @@
 package com.example.dingle.crawling;
 
+import com.example.dingle.fcm.service.FcmService;
 import com.example.dingle.homepage.entity.Homepage;
 import com.example.dingle.homepage.service.HomepageService;
 import com.example.dingle.keyword.entity.Keyword;
-import com.example.dingle.keyword.repository.KeywordRepository;
 import com.example.dingle.notice.entity.Notice;
 import com.example.dingle.notice.repository.NoticeRepository;
-import com.example.dingle.noticeKeyword.repository.NoticeKeywordRepository;
 import com.example.dingle.noticeKeyword.service.NoticeKeywordService;
+import com.example.dingle.personalNotice.entity.PersonalNotice;
 import com.example.dingle.personalNotice.service.PersonalNoticeService;
+import com.example.dingle.userHomepage.entity.UserHomepage;
+import com.example.dingle.userHomepage.repository.UserHomepageRepository;
 import com.example.dingle.userKeyword.entity.UserKeyword;
-import com.example.dingle.userKeyword.service.UserKeywordService;
+import com.example.dingle.userKeyword.repository.UserKeywordRepository;
+import lombok.RequiredArgsConstructor;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -27,31 +31,24 @@ import java.security.cert.X509Certificate;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class PknuCe {
+
     private final static String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36";
     private final static String HOMEPAGE_NAME = "부경대학교 컴퓨터·인공지능공학부";
     private final static String HOMEPAGE_URL = "https://ce.pknu.ac.kr/ce/1814";
     private final static String IMAGE_URL = "https://ce.pknu.ac.kr/";
     private final NoticeRepository noticeRepository;
-    private final NoticeKeywordRepository noticeKeywordRepository;
-    private final KeywordRepository keywordRepository;
     private final Filtering filtering;
-    private final UserKeywordService userKeywordService;
+    private final UserKeywordRepository userKeywordRepository;
     private final PersonalNoticeService personalNoticeService;
     private final NoticeKeywordService noticeKeywordService;
+    private final FcmService fcmService;
+    private final UserHomepageRepository userHomepageRepository;
     private final HomepageService homepageService;
-    private final String pknuCeAllNoticeUrl = "https://ce.pknu.ac.kr/ce/1814";
 
-    public PknuCe(NoticeRepository noticeRepository, NoticeKeywordRepository noticeKeywordRepository, KeywordRepository keywordRepository, Filtering filtering, UserKeywordService userKeywordService, PersonalNoticeService personalNoticeService, NoticeKeywordService noticeKeywordService, HomepageService homepageService) {
-        this.noticeRepository = noticeRepository;
-        this.noticeKeywordRepository = noticeKeywordRepository;
-        this.keywordRepository = keywordRepository;
-        this.filtering = filtering;
-        this.userKeywordService = userKeywordService;
-        this.personalNoticeService = personalNoticeService;
-        this.noticeKeywordService = noticeKeywordService;
-        this.homepageService = homepageService;
-    }
+    @Value("${file-server.domain} + ':' + ${server.port} + ${file-server.image.notice-default}")
+    private String noticeDefaultImage;
 
     // SSL 우회 등록
     public static void setSSL() throws Exception {
@@ -77,13 +74,13 @@ public class PknuCe {
     }
 
     public void pknuCeAllNoticeCrawling() throws Exception {
-        Homepage homepage = findPknuMainHomepage();
-        if (pknuCeAllNoticeUrl.indexOf("https://") >= 0) {
+        Homepage pknuCeHomepage = findPknuCeHomepage();
+        if (HOMEPAGE_URL.indexOf("https://") >= 0) {
             PknuCe.setSSL();
         }
 
         Connection listConnection, elementConnection;
-        listConnection = Jsoup.connect(pknuCeAllNoticeUrl).header("Content-Type", "application/json;charset=UTF-8").userAgent(USER_AGENT).method(Connection.Method.GET).ignoreContentType(true);
+        listConnection = Jsoup.connect(HOMEPAGE_URL).header("Content-Type", "application/json;charset=UTF-8").userAgent(USER_AGENT).method(Connection.Method.GET).ignoreContentType(true);
 
         // db에 저장된 가장 최신 공지사항 번호
         Long latestNoticeNum = noticeRepository.findLatestNoticeNum();
@@ -95,7 +92,7 @@ public class PknuCe {
             Long noticeNum = Long.valueOf(notice.select("td.bdlNum.noti").text());
             if (noticeNum <= latestNoticeNum) continue; // db에 저장된 가장 최신 공지사항 번호보다 크롤링한 공지사항 번호가 작은 경우 패스
             String title = notice.select("td.bdlTitle a").text();
-            String link = pknuCeAllNoticeUrl + notice.select("td.bdlTitle a").attr("href");
+            String link = HOMEPAGE_URL + notice.select("td.bdlTitle a").attr("href");
 
             // 링크를 통해 내용 일부 가져오기
             elementConnection = Jsoup.connect(link).header("Content-Type", "application/json;charset=UTF-8").userAgent(USER_AGENT).method(Connection.Method.GET).ignoreContentType(true);
@@ -105,41 +102,45 @@ public class PknuCe {
 
             // 이미지
             Element element = doc.select("td.bdvEdit").first();
-            String image = IMAGE_URL + element.select("img").attr("src"); // 이미지
+            String imageSrc = element.select("img").attr("src");
+            String image = noticeDefaultImage;
+            if (!imageSrc.isEmpty()) {
+                image = IMAGE_URL + imageSrc;
+            }
 
             // 저장
-            Notice newNotice = new Notice();
-            newNotice.setHomepage(homepage);
-            newNotice.setNoticeNum(noticeNum);
-            newNotice.setLink(link);
-            newNotice.setTitle(title);
-            newNotice.setContent(content);
-            newNotice.setImage(image);
-            newNotice = noticeRepository.save(newNotice);
+            Notice newNotice = noticeRepository.save(Notice.createWithNoticeNum(title, content, link, image, noticeNum, pknuCeHomepage));
 
-            // 키워드 기반 필터링(제목, 내용에서 키워드 추출 -> 키워드 설정한 user에게 알림 전송)
-            List<Keyword> keywords = filtering.filterKeywordsReturnKeyWord(title, text);
+            // 키워드 기반 필터링
+            List<Keyword> keywords = filtering.filterKeywordsReturnKeyWord(title, content);
             noticeKeywordService.createNoticeKeyword(newNotice, keywords);
-            List<UserKeyword> userKeywords = userKeywordService.findUserKeywordsWithKeywords(keywords);
-            personalNoticeService.createPersonalNotices(userKeywords, newNotice);
-            // TODO: 알림 전송
+
+            // 설정된 키워드 공지사항 알림
+            List<UserKeyword> userKeywords = userKeywordRepository.findAllByKeywordIn(keywords);
+            List<PersonalNotice> personalKeywordNotices = personalNoticeService.createPersonalNoticesWithUserKeywords(userKeywords, newNotice);
+            fcmService.sendPersonalKeywordNoticeToUser(personalKeywordNotices);
+
+            // 설정된 홈페이지 공지사항 알림
+            List<UserHomepage> userHomepages = userHomepageRepository.findAllByHomepage(pknuCeHomepage);
+            List<PersonalNotice> personalHomepageNotices = personalNoticeService.createPersonalNoticesWithUserHomepages(userHomepages, newNotice);
+            fcmService.sendPersonalHomepageNoticeToUser(personalHomepageNotices);
         }
     }
 
     // 연관관계 있는 홈페이지 반환
-    public Homepage findPknuMainHomepage() {
+    public Homepage findPknuCeHomepage() {
         List<Homepage> homepages = homepageService.findAllHomepages();
-        Homepage mainHomepage = null;
+        Homepage pknuCeHomepage = null;
         for (Homepage homepage : homepages) {
-            if (homepage.getName().equals(HOMEPAGE_NAME)) mainHomepage = homepage;
+            if (homepage.getName().equals(HOMEPAGE_NAME)) pknuCeHomepage = homepage;
         }
-        if (mainHomepage == null) { // 부경대 메인 홈페이지가 없는 경우 -> 새로 생성하기
-            mainHomepage = new Homepage();
-            mainHomepage.setName(HOMEPAGE_NAME);
-            mainHomepage.setUrl(HOMEPAGE_URL);
-            mainHomepage = homepageService.createHomepage(mainHomepage);
+        if (pknuCeHomepage == null) { // 부경대 메인 홈페이지가 없는 경우 -> 새로 생성하기
+            pknuCeHomepage = new Homepage();
+            pknuCeHomepage.setName(HOMEPAGE_NAME);
+            pknuCeHomepage.setUrl(HOMEPAGE_URL);
+            pknuCeHomepage = homepageService.createHomepage(pknuCeHomepage);
         }
 
-        return mainHomepage;
+        return pknuCeHomepage;
     }
 }

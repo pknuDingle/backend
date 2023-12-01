@@ -33,6 +33,9 @@ public class User extends Auditable {
     private String imageUrl;
 
     @Column
+    private String fcmToken;
+
+    @Column
     private long kakakoId;
 
     @Enumerated(EnumType.STRING)

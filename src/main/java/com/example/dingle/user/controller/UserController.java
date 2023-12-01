@@ -43,9 +43,6 @@ public class UserController {
     private final HomepageService homepageService;
 
 
-    // 언니가 준 토큰으로 로그인 -> JWT 발급 받으면 -> API 요청
-    // 카테고리 enum 값 달기
-
     // Create
     @PostMapping
     public ResponseEntity<UserResponseDto.Response> postUser(@Valid @RequestBody UserRequestDto.Post post) {

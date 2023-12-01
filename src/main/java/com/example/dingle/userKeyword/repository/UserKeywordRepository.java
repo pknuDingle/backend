@@ -14,9 +14,9 @@ public interface UserKeywordRepository extends JpaRepository<UserKeyword, Long> 
 
     void deleteAllByUserId(Long userId);
 
-    List<UserKeyword> findAllByKeyword(Keyword keyword);
-
     List<UserKeyword> findAllByUser(User user);
 
     Optional<UserKeyword> findAllByUserAndKeyword(User user, Keyword keyword);
+
+    List<UserKeyword> findAllByKeywordIn(List<Keyword> keywords);
 }

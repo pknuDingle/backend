@@ -73,12 +73,4 @@ public class UserKeywordService {
         Optional<UserKeyword> userKeyword = userKeywordRepository.findAllByUserAndKeyword(user, keyword);
         return userKeyword.orElse(null);
     }
-
-    public List<UserKeyword> findUserKeywordsWithKeywords(List<Keyword> keywords) {
-        List<UserKeyword> userKeywords = keywords.stream()
-                .flatMap(keyword -> userKeywordRepository.findAllByKeyword(keyword).stream())
-                .collect(Collectors.toList());
-
-        return userKeywords;
-    }
 }

@@ -40,4 +40,19 @@ public class KakaoAuthService {
         });
         return user;
     }
+
+    public User signinWithFcmToken(String token, String fcmToken) {
+        KakaoUserInfoResponse userInfo = kakaoUserInfo.getUserInfo(token);
+        User user = userRepository.findByKakakoId(userInfo.getId()).orElseGet(() -> {
+            User user1 = new User();
+            user1.setKakakoId(userInfo.getId());
+            user1.setName(userInfo.getKakao_account().getProfile().getNickname());
+            user1.setImageUrl(userInfo.getKakao_account().getProfile().getThumbnail_image_url());
+            user1.setFcmToken(fcmToken);
+
+            return userRepository.save(user1);
+        });
+
+        return user;
+    }
 }

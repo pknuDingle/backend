@@ -57,10 +57,21 @@ public class Notice extends Auditable {
         this.link = link;
     }
 
-    public Notice(String title, String content, String link, Long noticeNum) {
+    public Notice(String title, String content, Long pageNum, Long noticeNum, String image, String link, Homepage homepage) {
         this.title = title;
         this.content = content;
-        this.link = link;
+        this.pageNum = pageNum;
         this.noticeNum = noticeNum;
+        this.image = image;
+        this.link = link;
+        this.homepage = homepage;
+    }
+
+    public static Notice createWithPageNum(String title, String content, String link, String image, Long pageNum, Homepage homepage) {
+        return new Notice(title, content, pageNum, null, image, link, homepage);
+    }
+
+    public static Notice createWithNoticeNum(String title, String content, String link, String image, Long noticeNum, Homepage homepage) {
+        return new Notice(title, content, null, noticeNum, image, link, homepage);
     }
 }

@@ -17,4 +17,6 @@ public interface UserHomepageRepository extends JpaRepository<UserHomepage, Long
     List<UserHomepage> findAllByUser(User user);
 
     Optional<UserHomepage> findByUserAndHomepage(User user, Homepage homepage);
+
+    List<UserHomepage> findAllByHomepage(Homepage homepage);
 }
