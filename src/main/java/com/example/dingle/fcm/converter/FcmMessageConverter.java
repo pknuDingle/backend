@@ -11,6 +11,7 @@ public class FcmMessageConverter {
 
     public MulticastMessage personalKeywordNoticeToMessage(PersonalNotice personalNotice, List<String> fcmTokens) {
         return MulticastMessage.builder()
+                .putData("type", "keyword")
                 .putData("keyword", personalNotice.getKeyword().getName())
                 .putData("title", personalNotice.getNotice().getTitle())
                 .putData("content", personalNotice.getNotice().getContent().substring(0, 30) + "...")
@@ -21,6 +22,7 @@ public class FcmMessageConverter {
 
     public MulticastMessage personalHomepageNoticeToMessage(PersonalNotice personalNotice, List<String> fcmTokens) {
         return MulticastMessage.builder()
+                .putData("type", "homepage")
                 .putData("homepage", personalNotice.getHomepage().getName())
                 .putData("title", personalNotice.getNotice().getTitle())
                 .putData("content", personalNotice.getNotice().getContent().substring(0, 30) + "...")
@@ -31,7 +33,7 @@ public class FcmMessageConverter {
 
     public MulticastMessage toNotice(String title, String content, List<String> allUserTokens) {
         return MulticastMessage.builder()
-                .putData("type", "notice")
+                .putData("type", "all-notice")
                 .putData("title", title)
                 .putData("body", content)
                 .addAllTokens(allUserTokens)
