@@ -36,3 +36,4 @@ out/
 ### VS Code ###
 .vscode/
 /src/main/resources/firebase/firebase_service_key.json
+/src/main/resources/application.yml
