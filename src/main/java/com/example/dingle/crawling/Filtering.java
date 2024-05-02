@@ -2,10 +2,9 @@ package com.example.dingle.crawling;
 
 import com.example.dingle.keyword.entity.Keyword;
 import com.example.dingle.keyword.repository.KeywordRepository;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Component;
 
 @Component
 public class Filtering {
@@ -20,7 +19,8 @@ public class Filtering {
         // 카테고리 목록들을 순회하며, 키워드 찾기
         List<Keyword> keywords = keywordRepository.findAll();
         return keywords.stream()
-                .filter(keyword -> title.contains(keyword.getName()) || content.contains(keyword.getName()))
+                .filter(keyword -> title.contains(keyword.getName()) || content.contains(
+                        keyword.getName()))
                 .map(Keyword::getId)
                 .collect(Collectors.toList());
     }
@@ -29,7 +29,8 @@ public class Filtering {
         // 카테고리 목록들을 순회하며, 키워드 찾기
         List<Keyword> keywords = keywordRepository.findAll();
         return keywords.stream()
-                .filter(keyword -> title.contains(keyword.getName()) || content.contains(keyword.getName()))
+                .filter(keyword -> title.contains(keyword.getName()) || content.contains(
+                        keyword.getName()))
                 .collect(Collectors.toList());
     }
 }

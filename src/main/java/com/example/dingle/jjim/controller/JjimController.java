@@ -5,20 +5,27 @@ import com.example.dingle.jjim.dto.JjimResponseDto;
 import com.example.dingle.jjim.entity.Jjim;
 import com.example.dingle.jjim.mapper.JjimMapper;
 import com.example.dingle.jjim.service.JjimService;
+import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import javax.validation.constraints.Positive;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/jjim")
 @Validated
 @AllArgsConstructor
 public class JjimController {
+
     private final JjimService jjimService;
     private final JjimMapper jjimMapper;
 
@@ -43,7 +50,7 @@ public class JjimController {
     // Update
     @PutMapping("/{jjim-id}")
     public ResponseEntity patchJjim(@Positive @PathVariable("jjim-id") long jjimId,
-                                    @Valid @RequestBody JjimRequestDto.Patch patch) {
+            @Valid @RequestBody JjimRequestDto.Patch patch) {
         patch.setId(jjimId);
         Jjim jjim = jjimService.updateJjim(jjimMapper.jjimResponseDtoPatchToJjim(patch));
         JjimResponseDto.Response response = jjimMapper.jjimToJjimResponseDtoResponseCustom(jjim);

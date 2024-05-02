@@ -5,10 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class NoticeRequestDto {
+
     @Getter
     @Setter
     @AllArgsConstructor
     public static class Post {
+
         private long id;
         private String title;
         private String content;
@@ -20,6 +22,7 @@ public class NoticeRequestDto {
     @Setter
     @AllArgsConstructor
     public static class Patch {
+
         private long id;
         private String title;
         private String content;

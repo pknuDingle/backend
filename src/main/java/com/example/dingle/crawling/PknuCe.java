@@ -13,6 +13,13 @@ import com.example.dingle.userHomepage.entity.UserHomepage;
 import com.example.dingle.userHomepage.repository.UserHomepageRepository;
 import com.example.dingle.userKeyword.entity.UserKeyword;
 import com.example.dingle.userKeyword.repository.UserKeywordRepository;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
+import java.util.List;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -21,14 +28,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -80,7 +79,9 @@ public class PknuCe {
         }
 
         Connection listConnection, elementConnection;
-        listConnection = Jsoup.connect(HOMEPAGE_URL).header("Content-Type", "application/json;charset=UTF-8").userAgent(USER_AGENT).method(Connection.Method.GET).ignoreContentType(true);
+        listConnection = Jsoup.connect(HOMEPAGE_URL)
+                .header("Content-Type", "application/json;charset=UTF-8").userAgent(USER_AGENT)
+                .method(Connection.Method.GET).ignoreContentType(true);
 
         // db에 저장된 가장 최신 공지사항 번호
         Long latestNoticeNum = noticeRepository.findLatestNoticeNum();
@@ -90,12 +91,16 @@ public class PknuCe {
         for (Element notice : notices) {
             // 번호, 제목, 링크 가져오기
             Long noticeNum = Long.valueOf(notice.select("td.bdlNum.noti").text());
-            if (noticeNum <= latestNoticeNum) continue; // db에 저장된 가장 최신 공지사항 번호보다 크롤링한 공지사항 번호가 작은 경우 패스
+            if (noticeNum <= latestNoticeNum) {
+                continue; // db에 저장된 가장 최신 공지사항 번호보다 크롤링한 공지사항 번호가 작은 경우 패스
+            }
             String title = notice.select("td.bdlTitle a").text();
             String link = HOMEPAGE_URL + notice.select("td.bdlTitle a").attr("href");
 
             // 링크를 통해 내용 일부 가져오기
-            elementConnection = Jsoup.connect(link).header("Content-Type", "application/json;charset=UTF-8").userAgent(USER_AGENT).method(Connection.Method.GET).ignoreContentType(true);
+            elementConnection = Jsoup.connect(link)
+                    .header("Content-Type", "application/json;charset=UTF-8").userAgent(USER_AGENT)
+                    .method(Connection.Method.GET).ignoreContentType(true);
             Document doc = Jsoup.parse(elementConnection.get().html());
             String text = doc.select("td.bdvEdit").text();
             String content = text.length() > 30 ? text.substring(0, 30) + "..." : text;
@@ -109,7 +114,9 @@ public class PknuCe {
             }
 
             // 저장
-            Notice newNotice = noticeRepository.save(Notice.createWithNoticeNum(title, content, link, image, noticeNum, pknuCeHomepage));
+            Notice newNotice = noticeRepository.save(
+                    Notice.createWithNoticeNum(title, content, link, image, noticeNum,
+                            pknuCeHomepage));
 
             // 키워드 기반 필터링
             List<Keyword> keywords = filtering.filterKeywordsReturnKeyWord(title, content);
@@ -117,12 +124,15 @@ public class PknuCe {
 
             // 설정된 키워드 공지사항 알림
             List<UserKeyword> userKeywords = userKeywordRepository.findAllByKeywordIn(keywords);
-            List<PersonalNotice> personalKeywordNotices = personalNoticeService.createPersonalNoticesWithUserKeywords(userKeywords, newNotice);
+            List<PersonalNotice> personalKeywordNotices = personalNoticeService.createPersonalNoticesWithUserKeywords(
+                    userKeywords, newNotice);
             fcmService.sendPersonalKeywordNoticeToUser(personalKeywordNotices);
 
             // 설정된 홈페이지 공지사항 알림
-            List<UserHomepage> userHomepages = userHomepageRepository.findAllByHomepage(pknuCeHomepage);
-            List<PersonalNotice> personalHomepageNotices = personalNoticeService.createPersonalNoticesWithUserHomepages(userHomepages, newNotice);
+            List<UserHomepage> userHomepages = userHomepageRepository.findAllByHomepage(
+                    pknuCeHomepage);
+            List<PersonalNotice> personalHomepageNotices = personalNoticeService.createPersonalNoticesWithUserHomepages(
+                    userHomepages, newNotice);
             fcmService.sendPersonalHomepageNoticeToUser(personalHomepageNotices);
         }
     }
@@ -132,7 +142,9 @@ public class PknuCe {
         List<Homepage> homepages = homepageService.findAllHomepages();
         Homepage pknuCeHomepage = null;
         for (Homepage homepage : homepages) {
-            if (homepage.getName().equals(HOMEPAGE_NAME)) pknuCeHomepage = homepage;
+            if (homepage.getName().equals(HOMEPAGE_NAME)) {
+                pknuCeHomepage = homepage;
+            }
         }
         if (pknuCeHomepage == null) { // 부경대 메인 홈페이지가 없는 경우 -> 새로 생성하기
             pknuCeHomepage = new Homepage();

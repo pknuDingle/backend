@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class FirebaseMessagingWrapperImpl implements FirebaseMessagingWrapper {
+
     @Override
     public void sendAsync(Message message) {
         FirebaseMessaging.getInstance().sendAsync(message);

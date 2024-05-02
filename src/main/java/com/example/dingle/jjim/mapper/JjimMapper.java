@@ -7,6 +7,7 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface JjimMapper {
+
     Jjim jjimResponseDtoPostToJjim(JjimRequestDto.Post post);
 
     Jjim jjimResponseDtoPatchToJjim(JjimRequestDto.Patch patch);

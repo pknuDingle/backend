@@ -3,12 +3,12 @@ package com.example.dingle.util;
 import com.example.dingle.keyword.entity.CategoryType;
 import com.example.dingle.keyword.entity.Keyword;
 import com.example.dingle.keyword.service.KeywordService;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
+import org.springframework.stereotype.Component;
 
 @Component
 public class AutoKeyword {
+
     private final KeywordService keywordService;
     private final List<String> SCHOOLS = List.of(
             "근로",

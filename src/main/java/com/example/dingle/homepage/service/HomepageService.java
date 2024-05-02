@@ -8,16 +8,16 @@ import com.example.dingle.notice.entity.Notice;
 import com.example.dingle.user.entity.User;
 import com.example.dingle.userHomepage.service.UserHomepageService;
 import com.example.dingle.util.FindUserByJWT;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
 public class HomepageService {
+
     private final HomepageRepository homepageRepository;
     private final UserHomepageService userHomepageService;
     private final FindUserByJWT findUserByJWT;
@@ -72,6 +72,7 @@ public class HomepageService {
     // 증명
     public Homepage verifiedHomepage(long homepageId) {
         Optional<Homepage> homepage = homepageRepository.findById(homepageId);
-        return homepage.orElseThrow(() -> new BusinessLogicException(ExceptionCode.HOMEPAGE_NOT_FOUND));
+        return homepage.orElseThrow(
+                () -> new BusinessLogicException(ExceptionCode.HOMEPAGE_NOT_FOUND));
     }
 }

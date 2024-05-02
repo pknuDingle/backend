@@ -8,14 +8,14 @@ import com.example.dingle.notice.entity.Notice;
 import com.example.dingle.notice.service.NoticeService;
 import com.example.dingle.user.entity.User;
 import com.example.dingle.util.FindUserByJWT;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class JjimService {
+
     private final JjimRepository jjimRepository;
     private final NoticeService noticeService;
     private final FindUserByJWT findUserByJWT;
@@ -56,7 +56,8 @@ public class JjimService {
     }
 
     public void updateJjim(long noticeId) {
-        Jjim jjim = verifiedJjim(findUserByJWT.getLoginUser(), noticeService.verifiedNotice(noticeId));
+        Jjim jjim = verifiedJjim(findUserByJWT.getLoginUser(),
+                noticeService.verifiedNotice(noticeId));
         jjimRepository.delete(jjim);
     }
 

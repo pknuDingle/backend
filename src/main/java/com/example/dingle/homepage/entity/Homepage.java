@@ -4,14 +4,19 @@ import com.example.dingle.auditable.Auditable;
 import com.example.dingle.notice.entity.Notice;
 import com.example.dingle.user.entity.User;
 import com.example.dingle.userHomepage.entity.UserHomepage;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -19,6 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 public class Homepage extends Auditable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

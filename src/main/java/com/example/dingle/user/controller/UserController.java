@@ -17,22 +17,29 @@ import com.example.dingle.user.mapper.UserMapper;
 import com.example.dingle.user.service.UserService;
 import com.example.dingle.userHomepage.service.UserHomepageService;
 import com.example.dingle.userKeyword.service.UserKeywordService;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import javax.validation.constraints.Positive;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/user")
 @Validated
 @AllArgsConstructor
 public class UserController {
+
     private final UserService userService;
     private final UserMapper userMapper;
     private final KeywordService keywordService;
@@ -45,7 +52,8 @@ public class UserController {
 
     // Create
     @PostMapping
-    public ResponseEntity<UserResponseDto.Response> postUser(@Valid @RequestBody UserRequestDto.Post post) {
+    public ResponseEntity<UserResponseDto.Response> postUser(
+            @Valid @RequestBody UserRequestDto.Post post) {
         User user = userService.createUser(userMapper.userResponseDtoPostToUser(post));
         UserResponseDto.Response response = userMapper.userToUserResponseDtoResponse(user);
 
@@ -54,7 +62,8 @@ public class UserController {
 
     // Read
     @GetMapping("/{user-id}")
-    public ResponseEntity<UserResponseDto.Response> getUser(@Positive @PathVariable("user-id") long userId) {
+    public ResponseEntity<UserResponseDto.Response> getUser(
+            @Positive @PathVariable("user-id") long userId) {
         User user = userService.findUser(userId);
         UserResponseDto.Response response = userMapper.userToUserResponseDtoResponse(user);
 
@@ -71,8 +80,9 @@ public class UserController {
 
     // Update
     @PutMapping("/{user-id}")
-    public ResponseEntity<UserResponseDto.Response> patchUser(@Positive @PathVariable("user-id") long userId,
-                                                              @Valid @RequestBody UserRequestDto.Patch patch) {
+    public ResponseEntity<UserResponseDto.Response> patchUser(
+            @Positive @PathVariable("user-id") long userId,
+            @Valid @RequestBody UserRequestDto.Patch patch) {
         patch.setId(userId);
         User user = userService.updateUser(userMapper.userResponseDtoPatchToUser(patch));
         UserResponseDto.Response response = userMapper.userToUserResponseDtoResponse(user);
@@ -129,7 +139,8 @@ public class UserController {
         List<Homepage> homepages = posts.stream()
                 .map(post -> homepageMapper.homepageRequestDtoPostToHomepage(post))
                 .collect(Collectors.toList());
-        homepages.forEach(homepage -> userHomepageService.createUserHomepage(currentUser, homepage));
+        homepages.forEach(
+                homepage -> userHomepageService.createUserHomepage(currentUser, homepage));
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

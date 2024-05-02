@@ -8,16 +8,15 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import java.util.Base64;
+import java.util.Date;
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
-import java.util.Base64;
-import java.util.Date;
 
 @RequiredArgsConstructor
 @Component
@@ -42,7 +41,8 @@ public class JwtTokenProvider {
         return Jwts.builder()
                 .setClaims(claims) // 정보 저장
                 .setIssuedAt(now) // 토큰 발행 시간 정보
-                .setExpiration(new Date(now.getTime() + (accessTokenExpiration * 60 * 1000L))) // 토큰 유효시각 설정 (30분) = 30 * 60 * 1000L
+                .setExpiration(new Date(now.getTime() + (accessTokenExpiration * 60
+                        * 1000L))) // 토큰 유효시각 설정 (30분) = 30 * 60 * 1000L
                 .signWith(SignatureAlgorithm.HS256, secretKey)  // 암호화 알고리즘과, secret 값
                 .compact();
     }
@@ -51,7 +51,8 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String token) {
 //        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserPk(token));
 //        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
-        User user = userRepository.findById(Long.valueOf(this.getUserPk(token))).orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+        User user = userRepository.findById(Long.valueOf(this.getUserPk(token)))
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
         return new UsernamePasswordAuthenticationToken(user, "", null);
     }
 

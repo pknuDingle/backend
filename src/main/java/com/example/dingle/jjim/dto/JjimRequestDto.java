@@ -5,10 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class JjimRequestDto {
+
     @Getter
     @Setter
     @AllArgsConstructor
     public static class Post {
+
         private long id;
         private long userId;
         private long noticeId;
@@ -18,6 +20,7 @@ public class JjimRequestDto {
     @Setter
     @AllArgsConstructor
     public static class Patch {
+
         private long id;
         private long userId;
         private long noticeId;

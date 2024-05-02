@@ -3,11 +3,10 @@ package com.example.dingle.fcm.config;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import java.io.IOException;
+import javax.annotation.PostConstruct;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
-
-import javax.annotation.PostConstruct;
-import java.io.IOException;
 
 @Configuration
 public class FirebaseInit {
@@ -18,7 +17,8 @@ public class FirebaseInit {
     public void init() {
         try {
             FirebaseOptions options = new FirebaseOptions.Builder()
-                    .setCredentials(GoogleCredentials.fromStream(new ClassPathResource(path).getInputStream())).build();
+                    .setCredentials(GoogleCredentials.fromStream(
+                            new ClassPathResource(path).getInputStream())).build();
             if (FirebaseApp.getApps().isEmpty()) {
                 FirebaseApp.initializeApp(options);
             }

@@ -13,6 +13,18 @@ import com.example.dingle.userHomepage.entity.UserHomepage;
 import com.example.dingle.userHomepage.repository.UserHomepageRepository;
 import com.example.dingle.userKeyword.entity.UserKeyword;
 import com.example.dingle.userKeyword.repository.UserKeywordRepository;
+import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
+import java.util.List;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -21,14 +33,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import javax.net.ssl.*;
-import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -98,9 +102,12 @@ public class PknuMain {
             for (Element element : elementsContent) {
                 Notice notice = new Notice();
                 // 페이지 번호
-                String link = HOMEPAGE_URL + element.select("td.bdlTitle a").attr("href"); // 상세페이지 링크
+                String link =
+                        HOMEPAGE_URL + element.select("td.bdlTitle a").attr("href"); // 상세페이지 링크
                 long pageNum = Long.parseLong(link.split("no=")[1]); // 페이지 번호
-                if (pageNum <= latestPageNum) continue; // db에 저장된 가장 최신 공지사항 번호보다 크롤링한 공지사항 번호가 작은 경우 패스
+                if (pageNum <= latestPageNum) {
+                    continue; // db에 저장된 가장 최신 공지사항 번호보다 크롤링한 공지사항 번호가 작은 경우 패스
+                }
 //                if(pageNum != 713128) continue;
 
                 // 상세페이지 내용 크롤링
@@ -124,7 +131,9 @@ public class PknuMain {
                 }
 
                 // 공지사항 저장
-                Notice newNotice = noticeRepository.save(Notice.createWithPageNum(title, content, link, image, pageNum, mainHomepage));
+                Notice newNotice = noticeRepository.save(
+                        Notice.createWithPageNum(title, content, link, image, pageNum,
+                                mainHomepage));
 
                 // 키워드 기반 필터링
                 List<Keyword> keywords = filtering.filterKeywordsReturnKeyWord(title, content);
@@ -132,12 +141,15 @@ public class PknuMain {
 
                 // 설정된 키워드 공지사항 알림
                 List<UserKeyword> userKeywords = userKeywordRepository.findAllByKeywordIn(keywords);
-                List<PersonalNotice> personalKeywordNotices = personalNoticeService.createPersonalNoticesWithUserKeywords(userKeywords, newNotice);
+                List<PersonalNotice> personalKeywordNotices = personalNoticeService.createPersonalNoticesWithUserKeywords(
+                        userKeywords, newNotice);
                 fcmService.sendPersonalKeywordNoticeToUser(personalKeywordNotices);
 
                 // 설정된 홈페이지 공지사항 알림
-                List<UserHomepage> userHomepages = userHomepageRepository.findAllByHomepage(mainHomepage);
-                List<PersonalNotice> personalHomepageNotices = personalNoticeService.createPersonalNoticesWithUserHomepages(userHomepages, newNotice);
+                List<UserHomepage> userHomepages = userHomepageRepository.findAllByHomepage(
+                        mainHomepage);
+                List<PersonalNotice> personalHomepageNotices = personalNoticeService.createPersonalNoticesWithUserHomepages(
+                        userHomepages, newNotice);
                 fcmService.sendPersonalHomepageNoticeToUser(personalHomepageNotices);
             }
         } catch (IOException e) {
@@ -154,7 +166,9 @@ public class PknuMain {
         List<Homepage> homepages = homepageService.findAllHomepages();
         Homepage mainHomepage = null;
         for (Homepage homepage : homepages) {
-            if (homepage.getName().equals(HOMEPAGE_NAME)) mainHomepage = homepage;
+            if (homepage.getName().equals(HOMEPAGE_NAME)) {
+                mainHomepage = homepage;
+            }
         }
         if (mainHomepage == null) { // 부경대 메인 홈페이지가 없는 경우 -> 새로 생성하기
             mainHomepage = new Homepage();
@@ -180,8 +194,11 @@ public class PknuMain {
             String[] splits = split.split(">");
             if (splits.length > 1) {
                 if (splits[0].contains("href")) {
-                    content = content + splits[1] + "[" + splits[0].split("a href=\"")[1].split("\"")[0] + "]";
-                } else content += splits[1];
+                    content = content + splits[1] + "[" + splits[0].split("a href=\"")[1].split(
+                            "\"")[0] + "]";
+                } else {
+                    content += splits[1];
+                }
             }
         }
 

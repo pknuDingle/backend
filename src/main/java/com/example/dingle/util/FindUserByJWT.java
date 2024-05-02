@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 @Configuration
 @AllArgsConstructor
 public class FindUserByJWT {
+
     // 로그인한 직원 가져오기
     public User getLoginUser() {
         //SecurityContextHolder에서 회원정보 가져오기

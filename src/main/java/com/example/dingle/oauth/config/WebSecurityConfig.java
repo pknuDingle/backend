@@ -30,7 +30,8 @@ public class WebSecurityConfig {
                 .anyRequest().authenticated()
                 .and()
                 // Http 요청에 대한 Jwt 유효성 선 검사
-                .addFilterBefore(new JwtAuthFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthFilter(jwtTokenProvider),
+                        UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

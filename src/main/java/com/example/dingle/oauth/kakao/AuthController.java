@@ -4,17 +4,21 @@ import com.example.dingle.oauth.jwt.JwtTokenProvider;
 import com.example.dingle.user.entity.User;
 import com.example.dingle.user.mapper.UserMapper;
 import com.example.dingle.user.service.UserService;
+import javax.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.constraints.Positive;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/kakao")
 public class AuthController {
+
     private final KakaoAuthService kakaoAuthService;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserMapper userMapper;
@@ -42,7 +46,8 @@ public class AuthController {
 
     // fcm 토큰 값 추가된 로그인, 추후 프론트에서 fcm 토큰 생성 후 전송 구현 시 사용할 예정
     @PostMapping("/login")
-    public ResponseEntity authSigninWithFcmToken(@RequestHeader String accessToken, @RequestHeader String fcmToken) {
+    public ResponseEntity authSigninWithFcmToken(@RequestHeader String accessToken,
+            @RequestHeader String fcmToken) {
         User user = kakaoAuthService.signinWithFcmToken(accessToken, fcmToken);
         String jwt = jwtTokenProvider.createToken(String.valueOf(user.getId()));
         KakaoResponseDto.Response response = userMapper.userToKakaoResponseDtoResponse(user, jwt);

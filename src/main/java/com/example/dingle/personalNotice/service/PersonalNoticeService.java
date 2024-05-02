@@ -5,10 +5,9 @@ import com.example.dingle.personalNotice.entity.PersonalNotice;
 import com.example.dingle.personalNotice.repository.PersonalNoticeRepository;
 import com.example.dingle.userHomepage.entity.UserHomepage;
 import com.example.dingle.userKeyword.entity.UserKeyword;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
 @Service
 public class PersonalNoticeService {
@@ -19,14 +18,16 @@ public class PersonalNoticeService {
         this.personalNoticeRepository = personalNoticeRepository;
     }
 
-    public List<PersonalNotice> createPersonalNoticesWithUserKeywords(List<UserKeyword> userKeywords, Notice notice) {
+    public List<PersonalNotice> createPersonalNoticesWithUserKeywords(
+            List<UserKeyword> userKeywords, Notice notice) {
         return userKeywords.stream()
                 .map(userKeyword -> userKeyword.toPersonalNotice(notice))
                 .peek(personalNoticeRepository::save) // Optional: Save each personal notice if needed
                 .collect(Collectors.toList());
     }
 
-    public List<PersonalNotice> createPersonalNoticesWithUserHomepages(List<UserHomepage> userHomepages, Notice notice) {
+    public List<PersonalNotice> createPersonalNoticesWithUserHomepages(
+            List<UserHomepage> userHomepages, Notice notice) {
         return userHomepages.stream()
                 .map(userHomepage -> userHomepage.toPersonalNotice(notice))
                 .peek(personalNoticeRepository::save) // Optional: Save each personal notice if needed

@@ -3,6 +3,7 @@ package com.example.dingle.exception;
 import lombok.Getter;
 
 public class BusinessLogicException extends RuntimeException {
+
     @Getter
     private final ExceptionCode exceptionCode;
 

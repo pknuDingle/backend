@@ -7,15 +7,15 @@ import com.example.dingle.notice.entity.Notice;
 import com.example.dingle.noticeKeyword.entity.NoticeKeyword;
 import com.example.dingle.noticeKeyword.repository.NoticeKeywordRepository;
 import com.example.dingle.user.entity.User;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
 public class NoticeKeywordService {
+
     private final NoticeKeywordRepository noticeKeywordRepository;
 
     // Create
@@ -60,6 +60,7 @@ public class NoticeKeywordService {
     // 증명
     public NoticeKeyword verifiedNoticeKeyword(long noticeKeywordId) {
         Optional<NoticeKeyword> noticeKeyword = noticeKeywordRepository.findById(noticeKeywordId);
-        return noticeKeyword.orElseThrow(() -> new BusinessLogicException(ExceptionCode.NOTICEKEYWORD_NOT_FOUND));
+        return noticeKeyword.orElseThrow(
+                () -> new BusinessLogicException(ExceptionCode.NOTICEKEYWORD_NOT_FOUND));
     }
 }

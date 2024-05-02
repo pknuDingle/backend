@@ -4,12 +4,16 @@ import com.example.dingle.homepage.entity.Homepage;
 import com.example.dingle.keyword.entity.Keyword;
 import com.example.dingle.notice.entity.Notice;
 import com.example.dingle.user.entity.User;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.persistence.*;
 
 @Getter
 @Setter
@@ -17,6 +21,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 public class PersonalNotice {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

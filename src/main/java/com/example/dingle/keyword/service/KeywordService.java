@@ -7,16 +7,16 @@ import com.example.dingle.keyword.repository.KeywordRepository;
 import com.example.dingle.user.entity.User;
 import com.example.dingle.userKeyword.service.UserKeywordService;
 import com.example.dingle.util.FindUserByJWT;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
 public class KeywordService {
+
     private final KeywordRepository keywordRepository;
     private final UserKeywordService userKeywordService;
     private final FindUserByJWT findUserByJWT;
@@ -68,11 +68,13 @@ public class KeywordService {
     // 증명
     public Keyword verifiedKeyword(long keywordId) {
         Optional<Keyword> keyword = keywordRepository.findById(keywordId);
-        return keyword.orElseThrow(() -> new BusinessLogicException(ExceptionCode.KEYWORD_NOT_FOUND));
+        return keyword.orElseThrow(
+                () -> new BusinessLogicException(ExceptionCode.KEYWORD_NOT_FOUND));
     }
 
     public Keyword verifiedKeyword(String name) {
         Optional<Keyword> keyword = keywordRepository.findByName(name);
-        return keyword.orElseThrow(() -> new BusinessLogicException(ExceptionCode.KEYWORD_NOT_FOUND));
+        return keyword.orElseThrow(
+                () -> new BusinessLogicException(ExceptionCode.KEYWORD_NOT_FOUND));
     }
 }

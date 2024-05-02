@@ -6,10 +6,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class UserRequestDto {
+
     @Getter
     @Setter
     @AllArgsConstructor
     public static class Post {
+
         private long id;
         private String name;
         private String email;
@@ -22,6 +24,7 @@ public class UserRequestDto {
     @Setter
     @AllArgsConstructor
     public static class Patch {
+
         private long id;
         private String name;
         private String email;

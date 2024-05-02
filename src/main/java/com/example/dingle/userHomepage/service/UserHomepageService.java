@@ -6,17 +6,17 @@ import com.example.dingle.homepage.entity.Homepage;
 import com.example.dingle.user.entity.User;
 import com.example.dingle.userHomepage.entity.UserHomepage;
 import com.example.dingle.userHomepage.repository.UserHomepageRepository;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 @Service
 @AllArgsConstructor
 public class UserHomepageService {
+
     private final UserHomepageRepository userHomepageRepository;
 
     // Create
@@ -28,7 +28,9 @@ public class UserHomepageService {
     public void createUserHomepage(User user, List<Homepage> homepages) {
         // 새로운 키워드 생성
         for (Homepage homepage : homepages) {
-            if (verifiedUserHomepage(user, homepage) == null) createUserHomepage(user, homepage);
+            if (verifiedUserHomepage(user, homepage) == null) {
+                createUserHomepage(user, homepage);
+            }
         }
 
         // 이전 키워드 제거
@@ -49,7 +51,8 @@ public class UserHomepageService {
     }
 
     public List<Homepage> findHomepageByUser(User user) {
-        return userHomepageRepository.findAllByUser(user).stream().map(UserHomepage::getHomepage).collect(Collectors.toList());
+        return userHomepageRepository.findAllByUser(user).stream().map(UserHomepage::getHomepage)
+                .collect(Collectors.toList());
     }
 
     // Delete
@@ -70,11 +73,13 @@ public class UserHomepageService {
     // 증명
     public UserHomepage verifiedUserHomepage(long userHomepageId) {
         Optional<UserHomepage> userHomepage = userHomepageRepository.findById(userHomepageId);
-        return userHomepage.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USERHOMEPAGE_NOT_FOUND));
+        return userHomepage.orElseThrow(
+                () -> new BusinessLogicException(ExceptionCode.USERHOMEPAGE_NOT_FOUND));
     }
 
     public UserHomepage verifiedUserHomepage(User user, Homepage homepage) {
-        Optional<UserHomepage> userHomepage = userHomepageRepository.findByUserAndHomepage(user, homepage);
+        Optional<UserHomepage> userHomepage = userHomepageRepository.findByUserAndHomepage(user,
+                homepage);
         return userHomepage.orElse(null);
     }
 

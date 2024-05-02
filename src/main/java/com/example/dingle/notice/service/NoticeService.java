@@ -13,17 +13,17 @@ import com.example.dingle.user.entity.User;
 import com.example.dingle.userHomepage.service.UserHomepageService;
 import com.example.dingle.userKeyword.service.UserKeywordService;
 import com.example.dingle.util.FindUserByJWT;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
 public class NoticeService {
+
     private final NoticeRepository noticeRepository;
     private final FindUserByJWT findUserByJWT;
     private final JjimRepository jjimRepository;
@@ -68,10 +68,14 @@ public class NoticeService {
         List<Homepage> homepages = userHomepageService.findHomepageByUser(user);
 
         // 설정한 homepage가 없는 경우
-        if (homepages.size() == 0) return new ArrayList<>();
+        if (homepages.size() == 0) {
+            return new ArrayList<>();
+        }
 
         // 모든 homepage가 설정되어 경우
-        if (homepages.size() == 2) return notices;
+        if (homepages.size() == 2) {
+            return notices;
+        }
 
         // 1개의 homepage만 설정되어 있는 경우
         long homepageId = homepages.get(0).getId();

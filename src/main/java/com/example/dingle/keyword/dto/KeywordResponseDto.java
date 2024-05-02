@@ -9,6 +9,7 @@ public class KeywordResponseDto {
     @Setter
     @AllArgsConstructor
     public static class Response {
+
         private long id;
         private String name;
         private CategoryType categoryType;

@@ -5,11 +5,10 @@ import com.example.dingle.fcm.converter.FcmMessageConverter;
 import com.example.dingle.personalNotice.entity.PersonalNotice;
 import com.example.dingle.user.repository.UserRepository;
 import com.google.firebase.messaging.MulticastMessage;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -22,11 +21,15 @@ public class FcmService {
     /**
      * 사용자가 설정한 키워드 공지사항 알림
      */
-    public void sendPersonalKeywordNoticeToUser(List<PersonalNotice> personalNotices) throws Exception {
+    public void sendPersonalKeywordNoticeToUser(List<PersonalNotice> personalNotices)
+            throws Exception {
         if (!personalNotices.isEmpty()) {
-            List<String> fcmTokens = personalNotices.stream().map(personalNotice -> personalNotice.getUser().getFcmToken()).collect(Collectors.toList());
+            List<String> fcmTokens = personalNotices.stream()
+                    .map(personalNotice -> personalNotice.getUser().getFcmToken())
+                    .collect(Collectors.toList());
 
-            MulticastMessage message = fcmMessageConverter.personalKeywordNoticeToMessage(personalNotices.get(0), fcmTokens);
+            MulticastMessage message = fcmMessageConverter.personalKeywordNoticeToMessage(
+                    personalNotices.get(0), fcmTokens);
             firebaseMessagingWrapper.sendMulticast(message);
         }
     }
@@ -34,11 +37,15 @@ public class FcmService {
     /**
      * 사용자가 설정한 홈페이지 공지사항 알림
      */
-    public void sendPersonalHomepageNoticeToUser(List<PersonalNotice> personalNotices) throws Exception {
+    public void sendPersonalHomepageNoticeToUser(List<PersonalNotice> personalNotices)
+            throws Exception {
         if (!personalNotices.isEmpty()) {
-            List<String> fcmTokens = personalNotices.stream().map(personalNotice -> personalNotice.getUser().getFcmToken()).collect(Collectors.toList());
+            List<String> fcmTokens = personalNotices.stream()
+                    .map(personalNotice -> personalNotice.getUser().getFcmToken())
+                    .collect(Collectors.toList());
 
-            MulticastMessage message = fcmMessageConverter.personalHomepageNoticeToMessage(personalNotices.get(0), fcmTokens);
+            MulticastMessage message = fcmMessageConverter.personalHomepageNoticeToMessage(
+                    personalNotices.get(0), fcmTokens);
             firebaseMessagingWrapper.sendMulticast(message);
         }
     }
@@ -47,7 +54,8 @@ public class FcmService {
      * 전체 공지사항 알림
      */
     public void sendNoticeToAll(String title, String content) throws Exception {
-        List<String> allUserTokens = userRepository.findAll().stream().map(user -> user.getFcmToken()).collect(Collectors.toList());
+        List<String> allUserTokens = userRepository.findAll().stream()
+                .map(user -> user.getFcmToken()).collect(Collectors.toList());
         MulticastMessage message = fcmMessageConverter.toNotice(title, content, allUserTokens);
         firebaseMessagingWrapper.sendMulticast(message);
     }

@@ -5,6 +5,7 @@ import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.MulticastMessage;
 
 public interface FirebaseMessagingWrapper {
+
     void sendAsync(Message message);
 
     void sendMulticast(MulticastMessage message) throws FirebaseMessagingException;

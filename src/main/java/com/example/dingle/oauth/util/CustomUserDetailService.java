@@ -4,6 +4,8 @@ import com.example.dingle.exception.BusinessLogicException;
 import com.example.dingle.exception.ExceptionCode;
 import com.example.dingle.user.entity.User;
 import com.example.dingle.user.repository.UserRepository;
+import java.util.Collection;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,24 +13,24 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.Optional;
-
 @Component
 @AllArgsConstructor
 public class CustomUserDetailService implements UserDetailsService {
+
     private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
         Optional<User> optionalMember = userRepository.findById(Long.valueOf(id));
-        User findUser = optionalMember.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+        User findUser = optionalMember.orElseThrow(
+                () -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
 
         return new CustomUserDetails(findUser);
     }
 
 
     private static final class CustomUserDetails extends User implements UserDetails {
+
         CustomUserDetails(User user) {
             setId(user.getId());
             setName(user.getName());
