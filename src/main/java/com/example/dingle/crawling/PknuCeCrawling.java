@@ -1,4 +1,4 @@
-package com.example.dingle.Crawling;
+package com.example.dingle.crawling;
 
 import com.example.dingle.fcm.service.FcmService;
 import com.example.dingle.homepage.entity.Homepage;
@@ -19,24 +19,24 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PknuMainCrawling extends PknuCrawling {
+public class PknuCeCrawling extends PknuCrawling {
 
-    public PknuMainCrawling(PersonalNoticeService personalNoticeService,
+    public PknuCeCrawling(PersonalNoticeService personalNoticeService,
             NoticeKeywordService noticeKeywordService, FcmService fcmService,
             HomepageService homepageService, NoticeRepository noticeRepository,
             UserHomepageRepository userHomepageRepository,
             UserKeywordRepository userKeywordRepository, Filtering filtering) {
         super(personalNoticeService, noticeKeywordService, fcmService, homepageService,
                 noticeRepository, userHomepageRepository, userKeywordRepository, filtering);
-        homepageName = "부경대학교 메인홈페이지";
-        homepageUrl = "https://www.pknu.ac.kr/main/163";
+        homepageName = "부경대학교 컴퓨터·인공지능공학부";
+        homepageUrl = "https://ce.pknu.ac.kr/ce/1814";
     }
 
     @Override
     @Scheduled(fixedDelay = 3600000)
     public void crawling() {
         try {
-            Homepage mainHomepage = findHomepage();
+            Homepage pknuCeHomepage = findHomepage();
             List<Notice> newNotices = new ArrayList<>();
             if (homepageUrl.contains("https://")) {
                 setSSL();
@@ -44,7 +44,7 @@ public class PknuMainCrawling extends PknuCrawling {
 
             // 공지사항 리스트
             Elements notices = getConnection(homepageUrl).get()
-                    .select(".brdList tbody tr:not(.noti)");
+                    .select(".a_bdCont .a_brdList tbody tr:not(.noti)");
             for (Element notice : notices) {
                 // 번호, 제목, 링크 가져오기
                 String link = homepageUrl + notice.select("td.bdlTitle a").attr("href");
@@ -55,29 +55,27 @@ public class PknuMainCrawling extends PknuCrawling {
 
                 // 상세페이지 내용 크롤링
                 Document doc = getConnection(link).get();
-                String title = doc.getElementsByClass("title_b").get(0).text(); // 제목
-                String text = doc.select("div.bdvTxt").get(0).text(); // 내용
+                String title = notice.select("td.bdlTitle a").text();
+                String text = doc.select("td.bdvEdit").text();
                 String content = text.length() > 30 ? text.substring(0, 30) + "..." : text;
 
                 // 이미지
-                Element imageElement = doc.select("div.bdvTxt").first();
-                String image = imageElement.select("img").attr("src"); // 이미지
+                Element element = doc.select("td.bdvEdit").first();
+                String image = element.select("img").attr("src");
                 if (image.isEmpty()) {
                     image = noticeDefaultImage;
                 }
 
                 // 공지사항 저장
-                newNotices.add(saveNotice(title, content, link, image, noticeNum, mainHomepage));
+                newNotices.add(saveNotice(title, content, link, image, noticeNum, pknuCeHomepage));
             }
 
             // 공지사항에서 키워드 필터링 -> 키워드, 홈페이지 기반 알림
             List<Keyword> keywords = keywordFiltering(newNotices);
             sendKeywordNotification(keywords, newNotices);
-            sendHomepageNotification(mainHomepage, newNotices);
+            sendHomepageNotification(pknuCeHomepage, newNotices);
         } catch (Exception exception) {
             throw new RuntimeException("크롤링에 실패했습니다.");
         }
-
-
     }
 }

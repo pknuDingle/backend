@@ -1,4 +1,4 @@
-package com.example.dingle.Crawling;
+package com.example.dingle.crawling;
 
 import com.example.dingle.fcm.service.FcmService;
 import com.example.dingle.homepage.entity.Homepage;

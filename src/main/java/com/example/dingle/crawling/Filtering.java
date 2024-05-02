@@ -1,4 +1,4 @@
-package com.example.dingle.Crawling;
+package com.example.dingle.crawling;
 
 import com.example.dingle.keyword.entity.Keyword;
 import com.example.dingle.keyword.repository.KeywordRepository;
